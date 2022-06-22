@@ -11,7 +11,7 @@
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/userWorkspaceMemberships.gql
+< loom/graphql/userWorkspaceMemberships.gql
 {}
 
 ###
@@ -24,7 +24,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/userWorkspaceMemberships.any.json
+< loom/json/userWorkspaceMemberships.any.json
 
 ###
 
@@ -35,7 +35,7 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/GetUserByIdWithProfile.gql
+< loom/graphql/GetUserByIdWithProfile.gql
 {
   "userId": {{userId}}
 }
@@ -50,7 +50,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/GetUserByIdWithProfile.root,archive.json
+< loom/json/GetUserByIdWithProfile.root,archive.json
 
 ###
 
@@ -67,7 +67,7 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/CreateSpace.gql
+< loom/graphql/CreateSpace.gql
 {
   "name": "Loop",
   "privacy": "workspace",
@@ -87,7 +87,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/CreateSpace.private.json
+< loom/json/CreateSpace.private.json
 
 ###
 
@@ -98,7 +98,7 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/getOpenSpaces.gql
+< loom/graphql/getOpenSpaces.gql
 {
   "first": 15
 }
@@ -113,7 +113,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/getOpenSpaces.json
+< loom/json/getOpenSpaces.json
 
 ###
 
@@ -124,7 +124,7 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/GetMySpaceMemberships.gql
+< loom/graphql/GetMySpaceMemberships.gql
 {
   "first": 20
 }
@@ -139,7 +139,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/GetMySpaceMemberships.any.json
+< loom/json/GetMySpaceMemberships.any.json
 
 ###
 
@@ -150,7 +150,7 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/GetMyClosedSpaceMemberships.gql
+< loom/graphql/GetMyClosedSpaceMemberships.gql
 {
   "first": 15
 }
@@ -165,7 +165,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/GetMyClosedSpaceMemberships.json
+< loom/json/GetMyClosedSpaceMemberships.json
 
 ###
 
@@ -176,7 +176,7 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/GetWorkspaceArchivedSpaces.gql
+< loom/graphql/GetWorkspaceArchivedSpaces.gql
 {
   "first": 1000
 }
@@ -191,7 +191,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/GetWorkspaceArchivedSpaces.json
+< loom/json/GetWorkspaceArchivedSpaces.json
 
 ###
 
@@ -202,7 +202,7 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/GetSpaceNameAndMembers.gql
+< loom/graphql/GetSpaceNameAndMembers.gql
 {
   "spaceId": "{{spaceId}}",
   "first": 5
@@ -218,7 +218,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/GetSpaceNameAndMembers.space.json
+< loom/json/GetSpaceNameAndMembers.space.json
 
 ###
 
@@ -229,7 +229,7 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/ArchiveSpace.gql
+< loom/graphql/ArchiveSpace.gql
 {
   "spaceId": "{{spaceId}}"
 }
@@ -244,7 +244,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/ArchiveSpace.json
+< loom/json/ArchiveSpace.json
 
 ###
 
@@ -255,7 +255,7 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/UnarchiveSpace.gql
+< loom/graphql/UnarchiveSpace.gql
 {
   "spaceId": "{{spaceId}}"
 }
@@ -270,7 +270,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/UnarchiveSpace.json
+< loom/json/UnarchiveSpace.json
 
 ###
 
@@ -281,7 +281,7 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/JoinSpace.gql
+< loom/graphql/JoinSpace.gql
 {
   "spaceId": "{{spaceId}}",
   "analyticsSource": "browse"
@@ -297,7 +297,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/JoinSpace.json
+< loom/json/JoinSpace.json
 
 ###
 
@@ -308,7 +308,7 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/LeaveSpace.gql
+< loom/graphql/LeaveSpace.gql
 {
   "spaceId": "{{spaceId}}",
   "analyticsSource": "space_page"
@@ -324,7 +324,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/LeaveSpace.json
+< loom/json/LeaveSpace.json
 
 ###
 
@@ -341,7 +341,7 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/GetParentFolders.gql
+< loom/graphql/GetParentFolders.gql
 {
   "folderId": "{{folderId}}"
 }
@@ -356,7 +356,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/GetParentFolders.any.json
+< loom/json/GetParentFolders.any.json
 
 ###
 
@@ -367,7 +367,7 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/GetPublishedFolders.gql
+< loom/graphql/GetPublishedFolders.gql
 {
   "first": 4,
   "after": null,
@@ -393,7 +393,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/GetPublishedFolders.root.json
+< loom/json/GetPublishedFolders.root.json
 
 ###
 
@@ -410,7 +410,7 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/createFolder.gql
+< loom/graphql/createFolder.gql
 {
   "name": "Loop",
   "parentFolderId": "{{parentFolderId}}",
@@ -427,7 +427,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/createFolder.root.json
+< loom/json/createFolder.root.json
 
 ###
 
@@ -438,7 +438,7 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/RenameFolder.gql
+< loom/graphql/RenameFolder.gql
 {
   "folderId": "{{folderIdToRename}}",
   "name": "Loop"
@@ -454,7 +454,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/RenameFolder.any.json
+< loom/json/RenameFolder.any.json
 
 ###
 
@@ -465,7 +465,7 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/MoveFolders.gql
+< loom/graphql/MoveFolders.gql
 {
   "folderIds": [
     "{{folderIdToMove}}"
@@ -485,7 +485,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/MoveFolders.root.json
+< loom/json/MoveFolders.root.json
 
 ###
 
@@ -496,7 +496,7 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/ArchiveFolders.gql
+< loom/graphql/ArchiveFolders.gql
 {
   "folderIds": [
     "{{folderIdToArchive}}"
@@ -514,7 +514,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/ArchiveFolders.root.json
+< loom/json/ArchiveFolders.root.json
 
 ###
 
@@ -525,7 +525,7 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/BulkDeleteFolders.gql
+< loom/graphql/BulkDeleteFolders.gql
 {
   "folderIds": [
     "{{folderIdToDelete}}"
@@ -542,7 +542,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/BulkDeleteFolders.any.json
+< loom/json/BulkDeleteFolders.any.json
 
 ###
 
@@ -559,7 +559,7 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-< graphql/GetLooms.gql
+< loom/graphql/GetLooms.gql
 {
   "limit": 12,
   "cursor": null,
@@ -592,7 +592,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/GetLooms.root.json
+< loom/json/GetLooms.root.json
 
 ###
 
