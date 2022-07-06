@@ -20,7 +20,7 @@ type operation string
 var operations embed.FS
 
 func NewClient(endpoint, token string) (*Client, error) {
-	req, err := http.NewRequest(http.MethodPost, endpoint, nil)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodPost, endpoint, nil)
 	if err != nil {
 		return nil, err
 	}

@@ -3,7 +3,7 @@ package command
 import (
 	"github.com/spf13/cobra"
 
-	"go.octolab.org/template/tool/internal/command/demo"
+	"go.octolab.org/tact/loop/internal/command/demo"
 )
 
 // New returns the new root command.

@@ -1,4 +1,4 @@
-module go.octolab.org/template/tool/tools
+module go.octolab.org/tact/loop/tools
 
 go 1.19
 
