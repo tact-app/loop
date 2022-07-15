@@ -1,0 +1,23 @@
+query GetParentFolders($folderId: ID!) {
+    getParentFolders(folderId: $folderId) {
+        __typename
+        ... on GetParentFoldersPayload {
+            currentFolder {
+                id
+                owner_id
+                name
+                visibility
+                totalNestedVideos
+                currentUserCanEdit
+                hasDuplicateInSpaces
+                __typename
+            }
+            parentFolders {
+                id
+                name
+                __typename
+            }
+            __typename
+        }
+    }
+}

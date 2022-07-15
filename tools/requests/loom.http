@@ -6,15 +6,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-[
-  {
-    "operationName": "GetParentFolders",
-    "variables": {
-      "folderId": "{{folderId}}"
-    },
-    "query": "query GetParentFolders($folderId: ID!) {\n  getParentFolders(folderId: $folderId) {\n    __typename\n    ... on GetParentFoldersPayload {\n      currentFolder {\n        id\n        owner_id\n        name\n        visibility\n        totalNestedVideos\n        currentUserCanEdit\n        hasDuplicateInSpaces\n        __typename\n      }\n      parentFolders {\n        id\n        name\n        __typename\n      }\n      __typename\n    }\n  }\n}\n"
-  }
-]
+< json/GetParentFolders.json
 
 ###
 
@@ -25,29 +17,44 @@ cookie: connect.sid={{sid}}
 GRAPHQL {{host}}/graphql
 cookie: connect.sid={{sid}}
 
-query GetParentFolders($folderId: ID!) {
-    getParentFolders(folderId: $folderId) {
-        __typename
-        ... on GetParentFoldersPayload {
-            currentFolder {
-                id
-                owner_id
-                name
-                visibility
-                totalNestedVideos
-                currentUserCanEdit
-                hasDuplicateInSpaces
-                __typename
-            }
-            parentFolders {
-                id
-                name
-                __typename
-            }
-            __typename
-        }
-    }
-}
+< graphql/GetParentFolders.gql
 {
   "folderId": "{{folderId}}"
+}
+
+###
+
+# @name GetPublishedFolders.json
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+POST {{host}}/graphql
+content-type: application/json
+cookie: connect.sid={{sid}}
+
+< json/GetPublishedFolders.json
+
+###
+
+# @name GetPublishedFolders.gql
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+GRAPHQL {{host}}/graphql
+cookie: connect.sid={{sid}}
+
+< graphql/GetPublishedFolders.gql
+{
+  "first": 4,
+  "after": null,
+  "parentFolderId": "{{parentFolderId}}",
+  "source": "ACTIVE",
+  "sortOrder": "DESC",
+  "sortType": "RECENT",
+  "filters": [
+    {
+      "type": "CREATED_BY_ME"
+    }
+  ],
+  "timeRange": null
 }

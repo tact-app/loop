@@ -1,0 +1,100 @@
+query GetPublishedFolders(
+    $first: Int!,
+    $after: String,
+    $source: FolderSource!,
+    $sourceValue: String,
+    $sortType: LoomsSortType!,
+    $sortOrder: LoomsSortOrder!,
+    $parentFolderId: String,
+    $workspaceId: ID,
+    $filters: [LoomsCollectionFilter!],
+    $timeRange: TimeRange,
+) {
+    getPublishedFolders {
+        __typename
+        ... on GetPublishedFoldersPayload {
+            folders(
+                first: $first
+                after: $after
+                source: $source
+                sourceValue: $sourceValue
+                sortType: $sortType
+                sortOrder: $sortOrder
+                parentFolderId: $parentFolderId
+                workspaceId: $workspaceId
+                filters: $filters
+                timeRange: $timeRange
+            ) {
+                totalCount
+                edges {
+                    cursor
+                    node {
+                        ...FolderFragment
+                        __typename
+                    }
+                    __typename
+                }
+                pageInfo {
+                    endCursor
+                    hasNextPage
+                    __typename
+                }
+                __typename
+            }
+            __typename
+        }
+    }
+}
+
+fragment FolderFragment on RegularUserFolder {
+    id
+    contentLastUpdated
+    isArchived
+    currentUserCanEdit
+    name
+    organization_id
+    owner_id
+    shared
+    special_id
+    visibility
+    totalNestedVideos
+    isTopLevelFolder
+    hasSubFolders
+    hasDuplicateInSpaces
+    space {
+        id
+        name
+        is_primary
+        __typename
+    }
+    owner {
+        email
+        first_name
+        last_name
+        avatars {
+            name
+            thumb
+            __typename
+        }
+        __typename
+    }
+    organization {
+        id
+        name
+        __typename
+    }
+    parent_folder {
+        id
+        name
+        special_id
+        owner_id
+        owner {
+            email
+            first_name
+            last_name
+            __typename
+        }
+        __typename
+    }
+    __typename
+}
