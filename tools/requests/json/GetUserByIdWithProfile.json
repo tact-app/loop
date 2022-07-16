@@ -1,0 +1,9 @@
+[
+  {
+    "operationName": "GetUserByIdWithProfile",
+    "variables": {
+      "userId": "{{userId}}"
+    },
+    "query": "query GetUserByIdWithProfile($userId: ID!) {\n  user: getUserById(userId: $userId) {\n    __typename\n    ... on RegularUserPayload {\n      user {\n        id\n        email\n        first_name\n        last_name\n        avatars {\n          thumb\n          large\n          __typename\n        }\n        profile {\n          profileUrl\n          profileVideoCount\n          communityVideoCount\n          profileInfo {\n            role\n            location\n            __typename\n          }\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    ... on CommunityUserPayload {\n      user {\n        id\n        first_name\n        last_name\n        avatars {\n          thumb\n          large\n          __typename\n        }\n        profile {\n          profileUrl\n          communityVideoCount\n          profileInfo {\n            role\n            location\n            __typename\n          }\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n  }\n}\n"
+  }
+]
