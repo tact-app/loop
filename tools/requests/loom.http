@@ -128,3 +128,31 @@ cookie: connect.sid={{sid}}
 {
   "userId": "{{userId}}"
 }
+
+###
+
+# @name createFolder.json
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+POST {{host}}/graphql
+content-type: application/json
+cookie: connect.sid={{sid}}
+
+< json/createFolder.json
+
+###
+
+# @name createFolder.gql
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+GRAPHQL {{host}}/graphql
+cookie: connect.sid={{sid}}
+
+< graphql/createFolder.gql
+{
+  "name": "from Loop",
+  "parentFolderId": "{{parentFolderId}}",
+  "visibility": "owner"
+}

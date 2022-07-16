@@ -1,0 +1,83 @@
+mutation createFolder(
+    $name: String!,
+    $parentFolderId: String,
+    $spaceId: String,
+    $visibility: FolderVisibilityType,
+) {
+    createFolder(
+        name: $name
+        parentFolderId: $parentFolderId
+        spaceId: $spaceId
+        visibility: $visibility
+    ) {
+        __typename
+        ... on GenericError {
+            message
+            __typename
+        }
+        ... on InputValidationError {
+            message
+            __typename
+        }
+        ... on CreateFolderPayload {
+            folder {
+                ...FolderFragment
+                __typename
+            }
+            __typename
+        }
+    }
+}
+
+fragment FolderFragment on RegularUserFolder {
+    id
+    contentLastUpdated
+    isArchived
+    currentUserCanEdit
+    name
+    organization_id
+    owner_id
+    shared
+    special_id
+    visibility
+    totalNestedVideos
+    isTopLevelFolder
+    hasSubFolders
+    hasDuplicateInSpaces
+    space {
+        id
+        name
+        is_primary
+        __typename
+    }
+    owner {
+        email
+        first_name
+        last_name
+        avatars {
+            name
+            thumb
+            __typename
+        }
+        __typename
+    }
+    organization {
+        id
+        name
+        __typename
+    }
+    parent_folder {
+        id
+        name
+        special_id
+        owner_id
+        owner {
+            email
+            first_name
+            last_name
+            __typename
+        }
+        __typename
+    }
+    __typename
+}
