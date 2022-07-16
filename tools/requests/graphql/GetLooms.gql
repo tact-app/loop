@@ -1,0 +1,145 @@
+query GetLooms(
+    $limit: Int!,
+    $cursor: String,
+    $folderId: String,
+    $sourceValue: String,
+    $source: LoomsSource!,
+    $sortType: LoomsSortType!,
+    $sortOrder: LoomsSortOrder!,
+    $sortGrouping: LoomsSortGrouping,
+    $filters: [[LoomsCollectionFilter!]!],
+    $timeRange: TimeRange,
+) {
+    getLooms {
+        __typename
+        ... on GetLoomsPayload {
+            videos(
+                first: $limit
+                after: $cursor
+                folderId: $folderId
+                sourceValue: $sourceValue
+                source: $source
+                sortType: $sortType
+                sortOrder: $sortOrder
+                sortGrouping: $sortGrouping
+                filters: $filters
+                timeRange: $timeRange
+            ) {
+                edges {
+                    cursor
+                    node {
+                        ...videoCardFields
+                        __typename
+                    }
+                    profileSort
+                    __typename
+                }
+                pageInfo {
+                    endCursor
+                    hasNextPage
+                    __typename
+                }
+                __typename
+            }
+            __typename
+        }
+    }
+}
+
+fragment videoCardFields on RegularUserVideo {
+    id
+    name
+    complete
+    archived
+    createdAt
+    s3_id
+    totalReactions
+    totalComments
+    organization_id
+    currentUserHasWatched
+    views {
+        total
+        __typename
+    }
+    thumbnails {
+        default
+        defaultPlay
+        ogFull
+        full
+        fullPlay
+        defaultGif
+        defaultGifPlay
+        animatedPreview
+        __typename
+    }
+    owner {
+        first_name
+        last_name
+        id
+        avatars {
+            name
+            large
+            thumb
+            __typename
+        }
+        __typename
+    }
+    processing_information {
+        videoUploadValid
+        trim_id
+        __typename
+    }
+    video_properties {
+        thumbnail_is_png
+        duration
+        recording_version
+        trim_duration
+        __typename
+    }
+    organization {
+        name
+        __typename
+    }
+    owner_id
+    current_user_is_owner
+    download_enabled
+    currentUserCanEdit
+    tags
+    use_gif
+    visibility
+    allow_search_engine_indexing
+    is_protected
+    privacy
+    isCommunityLoom
+    spaceFolders {
+        id
+        name
+        special_id
+        owner_id
+        __typename
+    }
+    spaces {
+        name
+        id
+        isArchived
+        privacy
+        is_primary
+        __typename
+    }
+    folder {
+        id
+        name
+        special_id
+        owner_id
+        visibility
+        owner {
+            email
+            first_name
+            last_name
+            __typename
+        }
+        __typename
+    }
+    isCommunityLoom
+    __typename
+}
