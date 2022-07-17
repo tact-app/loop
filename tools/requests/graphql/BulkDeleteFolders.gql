@@ -1,0 +1,9 @@
+mutation BulkDeleteFolders($folderIds: [ID]!) {
+    bulkDeleteFolders(folderIds: $folderIds) {
+        ... on BulkDeleteFoldersPayload {
+            success
+            __typename
+        }
+        __typename
+    }
+}
