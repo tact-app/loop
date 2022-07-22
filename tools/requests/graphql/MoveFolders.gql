@@ -1,0 +1,26 @@
+mutation MoveFolders(
+    $folderIds: [ID!]!,
+    $newParentFolderId: ID,
+    $spaceId: ID,
+    $workspaceId: ID,
+) {
+    bulkMoveFolders(
+        folderIds: $folderIds
+        newParentFolderId: $newParentFolderId
+        spaceId: $spaceId
+        workspaceId: $workspaceId
+    ) {
+        ... on GenericError {
+            message
+            __typename
+        }
+        ... on MoveFolderPayload {
+            __typename
+            folders {
+                id
+                __typename
+            }
+        }
+        __typename
+    }
+}
