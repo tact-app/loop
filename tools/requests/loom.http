@@ -241,3 +241,30 @@ cookie: connect.sid={{sid}}
 {
   "first": 20
 }
+
+###
+
+# @name RenameFolder.json
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+POST {{host}}/graphql
+content-type: application/json
+cookie: connect.sid={{sid}}
+
+< json/RenameFolder.json
+
+###
+
+# @name RenameFolder.gql
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+GRAPHQL {{host}}/graphql
+cookie: connect.sid={{sid}}
+
+< graphql/RenameFolder.gql
+{
+  "folderId": "{{folderIdToRename}}",
+  "name": "from Loop II"
+}
