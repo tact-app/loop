@@ -1,0 +1,18 @@
+mutation ArchiveFolders(
+    $folderIds: [ID!]!,
+    $isArchived: Boolean!,
+) {
+    result: archiveFolders(
+        folderIds: $folderIds,
+        isArchived: $isArchived,
+    ) {
+        ... on ArchiveFoldersPayload {
+            folders {
+                id
+                __typename
+            }
+            __typename
+        }
+        __typename
+    }
+}
