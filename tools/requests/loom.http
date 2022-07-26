@@ -1,4 +1,4 @@
-# @name GetParentFolders.json
+# @name GetParentFolders.any.json
 # @no-cookie-jar
 # @no-log
 # @no-redirect
@@ -6,7 +6,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/GetParentFolders.json
+< json/GetParentFolders.any.json
 
 ###
 
@@ -24,7 +24,7 @@ cookie: connect.sid={{sid}}
 
 ###
 
-# @name GetPublishedFolders.json
+# @name GetPublishedFolders.root.json
 # @no-cookie-jar
 # @no-log
 # @no-redirect
@@ -32,7 +32,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/GetPublishedFolders.json
+< json/GetPublishedFolders.root.json
 
 ###
 
@@ -61,7 +61,7 @@ cookie: connect.sid={{sid}}
 
 ###
 
-# @name GetLooms.json
+# @name GetLooms.root.json
 # @no-cookie-jar
 # @no-log
 # @no-redirect
@@ -69,7 +69,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/GetLooms.json
+< json/GetLooms.root.json
 
 ###
 
@@ -105,7 +105,7 @@ cookie: connect.sid={{sid}}
 
 ###
 
-# @name GetUserByIdWithProfile.json
+# @name GetUserByIdWithProfile.root.json
 # @no-cookie-jar
 # @no-log
 # @no-redirect
@@ -113,7 +113,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/GetUserByIdWithProfile.json
+< json/GetUserByIdWithProfile.root.json
 
 ###
 
@@ -131,7 +131,7 @@ cookie: connect.sid={{sid}}
 
 ###
 
-# @name createFolder.json
+# @name createFolder.root.json
 # @no-cookie-jar
 # @no-log
 # @no-redirect
@@ -139,7 +139,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/createFolder.json
+< json/createFolder.root.json
 
 ###
 
@@ -159,7 +159,7 @@ cookie: connect.sid={{sid}}
 
 ###
 
-# @name BulkDeleteFolders.json
+# @name BulkDeleteFolders.any.json
 # @no-cookie-jar
 # @no-log
 # @no-redirect
@@ -167,7 +167,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/BulkDeleteFolders.json
+< json/BulkDeleteFolders.any.json
 
 ###
 
@@ -187,7 +187,7 @@ cookie: connect.sid={{sid}}
 
 ###
 
-# @name MoveFolders.json
+# @name MoveFolders.root.json
 # @no-cookie-jar
 # @no-log
 # @no-redirect
@@ -195,7 +195,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/MoveFolders.json
+< json/MoveFolders.root.json
 
 ###
 
@@ -218,7 +218,7 @@ cookie: connect.sid={{sid}}
 
 ###
 
-# @name GetMySpaceMemberships.json
+# @name GetMySpaceMemberships.any.json
 # @no-cookie-jar
 # @no-log
 # @no-redirect
@@ -226,7 +226,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/GetMySpaceMemberships.json
+< json/GetMySpaceMemberships.any.json
 
 ###
 
@@ -244,7 +244,7 @@ cookie: connect.sid={{sid}}
 
 ###
 
-# @name RenameFolder.json
+# @name RenameFolder.any.json
 # @no-cookie-jar
 # @no-log
 # @no-redirect
@@ -252,7 +252,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/RenameFolder.json
+< json/RenameFolder.any.json
 
 ###
 
@@ -271,7 +271,7 @@ cookie: connect.sid={{sid}}
 
 ###
 
-# @name ArchiveFolders.json
+# @name ArchiveFolders.root.json
 # @no-cookie-jar
 # @no-log
 # @no-redirect
@@ -279,7 +279,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/ArchiveFolders.json
+< json/ArchiveFolders.root.json
 
 ###
 

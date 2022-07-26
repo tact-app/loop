@@ -1,0 +1,13 @@
+[
+  {
+    "operationName": "MoveFolders",
+    "variables": {
+      "folderIds": [
+        "{{folderIdToMove}}"
+      ],
+      "newParentFolderId": "{{parentFolderId}}",
+      "spaceId": null
+    },
+    "query": "mutation MoveFolders($folderIds: [ID!]!, $newParentFolderId: ID, $spaceId: ID, $workspaceId: ID) {\n  bulkMoveFolders(\n    folderIds: $folderIds\n    newParentFolderId: $newParentFolderId\n    spaceId: $spaceId\n    workspaceId: $workspaceId\n  ) {\n    ... on GenericError {\n      message\n      __typename\n    }\n    ... on MoveFolderPayload {\n      __typename\n      folders {\n        id\n        __typename\n      }\n    }\n    __typename\n  }\n}\n"
+  }
+]
