@@ -1,12 +1,10 @@
-[
-  {
-    "operationName": "createFolder",
-    "variables": {
-      "name": "from Loop",
-      "parentFolderId": "{{parentFolderId}}",
-      "spaceId": "{{spaceId}}",
-      "visibility": "workspace"
-    },
-    "query": "mutation createFolder($name: String!, $parentFolderId: String, $spaceId: String, $visibility: FolderVisibilityType) {\n  createFolder(\n    name: $name\n    parentFolderId: $parentFolderId\n    spaceId: $spaceId\n    visibility: $visibility\n  ) {\n    __typename\n    ... on GenericError {\n      message\n      __typename\n    }\n    ... on InputValidationError {\n      message\n      __typename\n    }\n    ... on CreateFolderPayload {\n      folder {\n        ...FolderFragment\n        __typename\n      }\n      __typename\n    }\n  }\n}\n\nfragment FolderFragment on RegularUserFolder {\n  id\n  contentLastUpdated\n  isArchived\n  currentUserCanEdit\n  name\n  organization_id\n  owner_id\n  shared\n  special_id\n  visibility\n  totalNestedVideos\n  isTopLevelFolder\n  hasSubFolders\n  hasDuplicateInSpaces\n  space {\n    id\n    name\n    is_primary\n    __typename\n  }\n  owner {\n    email\n    first_name\n    last_name\n    avatars {\n      name\n      thumb\n      __typename\n    }\n    __typename\n  }\n  organization {\n    id\n    name\n    __typename\n  }\n  parent_folder {\n    id\n    name\n    special_id\n    owner_id\n    owner {\n      email\n      first_name\n      last_name\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n"
-  }
-]
+{
+  "operationName": "createFolder",
+  "variables": {
+    "name": "from Loop",
+    "parentFolderId": "{{parentFolderId}}",
+    "spaceId": "{{spaceId}}",
+    "visibility": "workspace"
+  },
+  "query": "mutation createFolder($name: String!, $parentFolderId: String, $spaceId: String, $visibility: FolderVisibilityType) {\n  createFolder(\n    name: $name\n    parentFolderId: $parentFolderId\n    spaceId: $spaceId\n    visibility: $visibility\n  ) {\n    __typename\n    ... on GenericError {\n      message\n      __typename\n    }\n    ... on InputValidationError {\n      message\n      __typename\n    }\n    ... on CreateFolderPayload {\n      folder {\n        ...FolderFragment\n        __typename\n      }\n      __typename\n    }\n  }\n}\n\nfragment FolderFragment on RegularUserFolder {\n  id\n  contentLastUpdated\n  isArchived\n  currentUserCanEdit\n  name\n  organization_id\n  owner_id\n  shared\n  special_id\n  visibility\n  totalNestedVideos\n  isTopLevelFolder\n  hasSubFolders\n  hasDuplicateInSpaces\n  space {\n    id\n    name\n    is_primary\n    __typename\n  }\n  owner {\n    email\n    first_name\n    last_name\n    avatars {\n      name\n      thumb\n      __typename\n    }\n    __typename\n  }\n  organization {\n    id\n    name\n    __typename\n  }\n  parent_folder {\n    id\n    name\n    special_id\n    owner_id\n    owner {\n      email\n      first_name\n      last_name\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n"
+}

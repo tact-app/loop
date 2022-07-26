@@ -1,9 +1,7 @@
-[
-  {
-    "operationName": "GetMySpaceMemberships",
-    "variables": {
-      "first": 20
-    },
-    "query": "query GetMySpaceMemberships($first: Int!, $after: String) {\n  result: getMySpaceMemberships {\n    __typename\n    ... on GetMySpaceMembershipsPayload {\n      memberships(first: $first, after: $after) {\n        edges {\n          node {\n            id\n            unread\n            space {\n              id\n              name\n              privacy\n              is_primary\n              __typename\n            }\n            __typename\n          }\n          __typename\n        }\n        pageInfo {\n          endCursor\n          hasNextPage\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    ... on Error {\n      message\n      __typename\n    }\n  }\n}\n"
-  }
-]
+{
+  "operationName": "GetMySpaceMemberships",
+  "variables": {
+    "first": 20
+  },
+  "query": "query GetMySpaceMemberships($first: Int!, $after: String) {\n  result: getMySpaceMemberships {\n    __typename\n    ... on GetMySpaceMembershipsPayload {\n      memberships(first: $first, after: $after) {\n        edges {\n          node {\n            id\n            unread\n            space {\n              id\n              name\n              privacy\n              is_primary\n              __typename\n            }\n            __typename\n          }\n          __typename\n        }\n        pageInfo {\n          endCursor\n          hasNextPage\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    ... on Error {\n      message\n      __typename\n    }\n  }\n}\n"
+}

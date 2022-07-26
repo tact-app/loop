@@ -1,12 +1,10 @@
-[
-  {
-    "operationName": "ArchiveFolders",
-    "variables": {
-      "folderIds": [
-        "{{folderIdToArchive}}"
-      ],
-      "isArchived": true
-    },
-    "query": "mutation ArchiveFolders($folderIds: [ID!]!, $isArchived: Boolean!) {\n  result: archiveFolders(folderIds: $folderIds, isArchived: $isArchived) {\n    ... on ArchiveFoldersPayload {\n      folders {\n        id\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"
-  }
-]
+{
+  "operationName": "ArchiveFolders",
+  "variables": {
+    "folderIds": [
+      "{{folderIdToArchive}}"
+    ],
+    "isArchived": true
+  },
+  "query": "mutation ArchiveFolders($folderIds: [ID!]!, $isArchived: Boolean!) {\n  result: archiveFolders(folderIds: $folderIds, isArchived: $isArchived) {\n    ... on ArchiveFoldersPayload {\n      folders {\n        id\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"
+}

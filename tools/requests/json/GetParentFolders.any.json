@@ -1,9 +1,7 @@
-[
-  {
-    "operationName": "GetParentFolders",
-    "variables": {
-      "folderId": "{{folderId}}"
-    },
-    "query": "query GetParentFolders($folderId: ID!) {\n  getParentFolders(folderId: $folderId) {\n    __typename\n    ... on GetParentFoldersPayload {\n      currentFolder {\n        id\n        owner_id\n        name\n        visibility\n        totalNestedVideos\n        currentUserCanEdit\n        hasDuplicateInSpaces\n        __typename\n      }\n      parentFolders {\n        id\n        name\n        __typename\n      }\n      __typename\n    }\n  }\n}\n"
-  }
-]
+{
+  "operationName": "GetParentFolders",
+  "variables": {
+    "folderId": "{{folderId}}"
+  },
+  "query": "query GetParentFolders($folderId: ID!) {\n  getParentFolders(folderId: $folderId) {\n    __typename\n    ... on GetParentFoldersPayload {\n      currentFolder {\n        id\n        owner_id\n        name\n        visibility\n        totalNestedVideos\n        currentUserCanEdit\n        hasDuplicateInSpaces\n        __typename\n      }\n      parentFolders {\n        id\n        name\n        __typename\n      }\n      __typename\n    }\n  }\n}\n"
+}

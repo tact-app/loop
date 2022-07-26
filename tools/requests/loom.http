@@ -297,3 +297,13 @@ cookie: connect.sid={{sid}}
   ],
   "isArchived": true
 }
+
+###
+
+# @name first look
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+POST {{host}}/graphql
+content-type: application/json
+cookie: connect.sid={{sid}}
