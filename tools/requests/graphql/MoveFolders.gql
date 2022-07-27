@@ -1,8 +1,8 @@
 mutation MoveFolders(
-    $folderIds: [ID!]!,
-    $newParentFolderId: ID,
-    $spaceId: ID,
-    $workspaceId: ID,
+    $folderIds: [ID!]!
+    $newParentFolderId: ID
+    $spaceId: ID
+    $workspaceId: ID
 ) {
     bulkMoveFolders(
         folderIds: $folderIds

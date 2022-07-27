@@ -1,14 +1,14 @@
 query GetPublishedFolders(
-    $first: Int!,
-    $after: String,
-    $source: FolderSource!,
-    $sourceValue: String,
-    $sortType: LoomsSortType!,
-    $sortOrder: LoomsSortOrder!,
-    $parentFolderId: String,
-    $workspaceId: ID,
-    $filters: [LoomsCollectionFilter!],
-    $timeRange: TimeRange,
+    $first: Int!
+    $after: String
+    $source: FolderSource!
+    $sourceValue: String
+    $sortType: LoomsSortType!
+    $sortOrder: LoomsSortOrder!
+    $parentFolderId: String
+    $workspaceId: ID
+    $filters: [LoomsCollectionFilter!]
+    $timeRange: TimeRange
 ) {
     getPublishedFolders {
         __typename

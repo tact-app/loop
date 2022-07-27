@@ -1,10 +1,10 @@
 mutation ArchiveFolders(
-    $folderIds: [ID!]!,
-    $isArchived: Boolean!,
+    $folderIds: [ID!]!
+    $isArchived: Boolean!
 ) {
     result: archiveFolders(
-        folderIds: $folderIds,
-        isArchived: $isArchived,
+        folderIds: $folderIds
+        isArchived: $isArchived
     ) {
         ... on ArchiveFoldersPayload {
             folders {

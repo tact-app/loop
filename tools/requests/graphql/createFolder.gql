@@ -1,8 +1,8 @@
 mutation createFolder(
-    $name: String!,
-    $parentFolderId: String,
-    $spaceId: String,
-    $visibility: FolderVisibilityType,
+    $name: String!
+    $parentFolderId: String
+    $spaceId: String
+    $visibility: FolderVisibilityType
 ) {
     createFolder(
         name: $name

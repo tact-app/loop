@@ -1,4 +1,7 @@
-mutation RenameFolder($folderId: ID!, $name: String!) {
+mutation RenameFolder(
+    $folderId: ID!
+    $name: String!
+) {
     renameFolder(folderId: $folderId, name: $name) {
         __typename
         ... on GenericError {

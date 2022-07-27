@@ -1,14 +1,14 @@
 query GetLooms(
-    $limit: Int!,
-    $cursor: String,
-    $folderId: String,
-    $sourceValue: String,
-    $source: LoomsSource!,
-    $sortType: LoomsSortType!,
-    $sortOrder: LoomsSortOrder!,
-    $sortGrouping: LoomsSortGrouping,
-    $filters: [[LoomsCollectionFilter!]!],
-    $timeRange: TimeRange,
+    $limit: Int!
+    $cursor: String
+    $folderId: String
+    $sourceValue: String
+    $source: LoomsSource!
+    $sortType: LoomsSortType!
+    $sortOrder: LoomsSortOrder!
+    $sortGrouping: LoomsSortGrouping
+    $filters: [[LoomsCollectionFilter!]!]
+    $timeRange: TimeRange
 ) {
     getLooms {
         __typename
