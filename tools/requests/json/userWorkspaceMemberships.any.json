@@ -1,0 +1,5 @@
+{
+  "operationName": "userWorkspaceMemberships",
+  "variables": {},
+  "query": "query userWorkspaceMemberships {\n  userWorkspaceMemberships {\n    member_role\n    createdAt\n    isSelected\n    organization {\n      id\n      name\n      type\n      workspaceLogoPath\n      organization_properties\n      limits\n      counts {\n        videos\n        screenshots\n        users\n        folders\n        unseenNotifications\n        spaces {\n          total_active_spaces\n          __typename\n        }\n        __typename\n      }\n      member_roles {\n        value\n        name\n        inviteable\n        is_free\n        __typename\n      }\n      __typename\n    }\n    was_loom_user_before_membership\n    onboarding\n    member_limits\n    __typename\n  }\n}\n"
+}
