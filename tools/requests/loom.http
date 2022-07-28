@@ -1,4 +1,22 @@
-# @name GetParentFolders.any.json
+//
+// Working with workspace, users, and spaces.
+//
+
+###
+
+# @name userWorkspaceMemberships.gql
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+GRAPHQL {{host}}/graphql
+cookie: connect.sid={{sid}}
+
+< graphql/userWorkspaceMemberships.gql
+{}
+
+###
+
+# @name userWorkspaceMemberships.any.json
 # @no-cookie-jar
 # @no-log
 # @no-redirect
@@ -6,7 +24,92 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/GetParentFolders.any.json
+< json/userWorkspaceMemberships.any.json
+
+###
+
+# @name GetMySpaceMemberships.gql
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+GRAPHQL {{host}}/graphql
+cookie: connect.sid={{sid}}
+
+< graphql/GetMySpaceMemberships.gql
+{
+  "first": 20
+}
+
+###
+
+# @name GetMySpaceMemberships.any.json
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+POST {{host}}/graphql
+content-type: application/json
+cookie: connect.sid={{sid}}
+
+< json/GetMySpaceMemberships.any.json
+
+###
+
+# @name GetSpaceNameAndMembers.gql
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+GRAPHQL {{host}}/graphql
+cookie: connect.sid={{sid}}
+
+< graphql/GetSpaceNameAndMembers.gql
+{
+  "spaceId": "{{spaceId}}",
+  "first": 5
+}
+
+###
+
+# @name GetSpaceNameAndMembers.space.json
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+POST {{host}}/graphql
+content-type: application/json
+cookie: connect.sid={{sid}}
+
+< json/GetSpaceNameAndMembers.space.json
+
+###
+
+# @name GetUserByIdWithProfile.gql
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+GRAPHQL {{host}}/graphql
+cookie: connect.sid={{sid}}
+
+< graphql/GetUserByIdWithProfile.gql
+{
+  "userId": {{userId}}
+}
+
+###
+
+# @name GetUserByIdWithProfile.root,archive.json
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+POST {{host}}/graphql
+content-type: application/json
+cookie: connect.sid={{sid}}
+
+< json/GetUserByIdWithProfile.root,archive.json
+
+###
+
+//
+// Working with folder structure.
+//
 
 ###
 
@@ -24,7 +127,7 @@ cookie: connect.sid={{sid}}
 
 ###
 
-# @name GetPublishedFolders.root.json
+# @name GetParentFolders.any.json
 # @no-cookie-jar
 # @no-log
 # @no-redirect
@@ -32,7 +135,7 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/GetPublishedFolders.root.json
+< json/GetParentFolders.any.json
 
 ###
 
@@ -61,7 +164,7 @@ cookie: connect.sid={{sid}}
 
 ###
 
-# @name GetLooms.root.json
+# @name GetPublishedFolders.root.json
 # @no-cookie-jar
 # @no-log
 # @no-redirect
@@ -69,7 +172,162 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/GetLooms.root.json
+< json/GetPublishedFolders.root.json
+
+###
+
+//
+// Working with folders.
+//
+
+###
+
+# @name createFolder.gql
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+GRAPHQL {{host}}/graphql
+cookie: connect.sid={{sid}}
+
+< graphql/createFolder.gql
+{
+  "name": "from Loop",
+  "parentFolderId": "{{parentFolderId}}",
+  "visibility": "owner"
+}
+
+###
+
+# @name createFolder.root.json
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+POST {{host}}/graphql
+content-type: application/json
+cookie: connect.sid={{sid}}
+
+< json/createFolder.root.json
+
+###
+
+# @name RenameFolder.gql
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+GRAPHQL {{host}}/graphql
+cookie: connect.sid={{sid}}
+
+< graphql/RenameFolder.gql
+{
+  "folderId": "{{folderIdToRename}}",
+  "name": "from Loop II"
+}
+
+###
+
+# @name RenameFolder.any.json
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+POST {{host}}/graphql
+content-type: application/json
+cookie: connect.sid={{sid}}
+
+< json/RenameFolder.any.json
+
+###
+
+# @name MoveFolders.gql
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+GRAPHQL {{host}}/graphql
+cookie: connect.sid={{sid}}
+
+< graphql/MoveFolders.gql
+{
+  "folderIds": [
+    "{{folderIdToMove}}"
+  ],
+  "newParentFolderId": "{{parentFolderId}}",
+  "spaceId": "{{spaceId}}",
+  "workspaceId": {{workspaceId}}
+}
+
+###
+
+# @name MoveFolders.root.json
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+POST {{host}}/graphql
+content-type: application/json
+cookie: connect.sid={{sid}}
+
+< json/MoveFolders.root.json
+
+###
+
+# @name ArchiveFolders.gql
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+GRAPHQL {{host}}/graphql
+cookie: connect.sid={{sid}}
+
+< graphql/ArchiveFolders.gql
+{
+  "folderIds": [
+    "{{folderIdToArchive}}"
+  ],
+  "isArchived": true
+}
+
+###
+
+# @name ArchiveFolders.root.json
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+POST {{host}}/graphql
+content-type: application/json
+cookie: connect.sid={{sid}}
+
+< json/ArchiveFolders.root.json
+
+###
+
+# @name BulkDeleteFolders.gql
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+GRAPHQL {{host}}/graphql
+cookie: connect.sid={{sid}}
+
+< graphql/BulkDeleteFolders.gql
+{
+  "folderIds": [
+    "{{folderIdToDelete}}"
+  ]
+}
+
+###
+
+# @name BulkDeleteFolders.any.json
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+POST {{host}}/graphql
+content-type: application/json
+cookie: connect.sid={{sid}}
+
+< json/BulkDeleteFolders.any.json
+
+###
+
+//
+// Working with looms.
+//
 
 ###
 
@@ -105,7 +363,7 @@ cookie: connect.sid={{sid}}
 
 ###
 
-# @name GetUserByIdWithProfile.root.json
+# @name GetLooms.root.json
 # @no-cookie-jar
 # @no-log
 # @no-redirect
@@ -113,241 +371,13 @@ POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
 
-< json/GetUserByIdWithProfile.root.json
+< json/GetLooms.root.json
 
 ###
 
-# @name GetUserByIdWithProfile.gql
-# @no-cookie-jar
-# @no-log
-# @no-redirect
-GRAPHQL {{host}}/graphql
-cookie: connect.sid={{sid}}
-
-< graphql/GetUserByIdWithProfile.gql
-{
-  "userId": {{userId}}
-}
-
-###
-
-# @name createFolder.root.json
-# @no-cookie-jar
-# @no-log
-# @no-redirect
-POST {{host}}/graphql
-content-type: application/json
-cookie: connect.sid={{sid}}
-
-< json/createFolder.root.json
-
-###
-
-# @name createFolder.gql
-# @no-cookie-jar
-# @no-log
-# @no-redirect
-GRAPHQL {{host}}/graphql
-cookie: connect.sid={{sid}}
-
-< graphql/createFolder.gql
-{
-  "name": "from Loop",
-  "parentFolderId": "{{parentFolderId}}",
-  "visibility": "owner"
-}
-
-###
-
-# @name BulkDeleteFolders.any.json
-# @no-cookie-jar
-# @no-log
-# @no-redirect
-POST {{host}}/graphql
-content-type: application/json
-cookie: connect.sid={{sid}}
-
-< json/BulkDeleteFolders.any.json
-
-###
-
-# @name BulkDeleteFolders.gql
-# @no-cookie-jar
-# @no-log
-# @no-redirect
-GRAPHQL {{host}}/graphql
-cookie: connect.sid={{sid}}
-
-< graphql/BulkDeleteFolders.gql
-{
-  "folderIds": [
-    "{{folderIdToDelete}}"
-  ]
-}
-
-###
-
-# @name MoveFolders.root.json
-# @no-cookie-jar
-# @no-log
-# @no-redirect
-POST {{host}}/graphql
-content-type: application/json
-cookie: connect.sid={{sid}}
-
-< json/MoveFolders.root.json
-
-###
-
-# @name MoveFolders.gql
-# @no-cookie-jar
-# @no-log
-# @no-redirect
-GRAPHQL {{host}}/graphql
-cookie: connect.sid={{sid}}
-
-< graphql/MoveFolders.gql
-{
-  "folderIds": [
-    "{{folderIdToMove}}"
-  ],
-  "newParentFolderId": "{{parentFolderId}}",
-  "spaceId": "{{spaceId}}",
-  "workspaceId": {{workspaceId}}
-}
-
-###
-
-# @name GetMySpaceMemberships.any.json
-# @no-cookie-jar
-# @no-log
-# @no-redirect
-POST {{host}}/graphql
-content-type: application/json
-cookie: connect.sid={{sid}}
-
-< json/GetMySpaceMemberships.any.json
-
-###
-
-# @name GetMySpaceMemberships.gql
-# @no-cookie-jar
-# @no-log
-# @no-redirect
-GRAPHQL {{host}}/graphql
-cookie: connect.sid={{sid}}
-
-< graphql/GetMySpaceMemberships.gql
-{
-  "first": 20
-}
-
-###
-
-# @name RenameFolder.any.json
-# @no-cookie-jar
-# @no-log
-# @no-redirect
-POST {{host}}/graphql
-content-type: application/json
-cookie: connect.sid={{sid}}
-
-< json/RenameFolder.any.json
-
-###
-
-# @name RenameFolder.gql
-# @no-cookie-jar
-# @no-log
-# @no-redirect
-GRAPHQL {{host}}/graphql
-cookie: connect.sid={{sid}}
-
-< graphql/RenameFolder.gql
-{
-  "folderId": "{{folderIdToRename}}",
-  "name": "from Loop II"
-}
-
-###
-
-# @name ArchiveFolders.root.json
-# @no-cookie-jar
-# @no-log
-# @no-redirect
-POST {{host}}/graphql
-content-type: application/json
-cookie: connect.sid={{sid}}
-
-< json/ArchiveFolders.root.json
-
-###
-
-# @name ArchiveFolders.gql
-# @no-cookie-jar
-# @no-log
-# @no-redirect
-GRAPHQL {{host}}/graphql
-cookie: connect.sid={{sid}}
-
-< graphql/ArchiveFolders.gql
-{
-  "folderIds": [
-    "{{folderIdToArchive}}"
-  ],
-  "isArchived": true
-}
-
-###
-
-# @name GetSpaceNameAndMembers.space.json
-# @no-cookie-jar
-# @no-log
-# @no-redirect
-POST {{host}}/graphql
-content-type: application/json
-cookie: connect.sid={{sid}}
-
-< json/GetSpaceNameAndMembers.space.json
-
-###
-
-# @name GetSpaceNameAndMembers.gql
-# @no-cookie-jar
-# @no-log
-# @no-redirect
-GRAPHQL {{host}}/graphql
-cookie: connect.sid={{sid}}
-
-< graphql/GetSpaceNameAndMembers.gql
-{
-  "spaceId": "{{spaceId}}",
-  "first": 5
-}
-
-###
-
-# @name userWorkspaceMemberships.any.json
-# @no-cookie-jar
-# @no-log
-# @no-redirect
-POST {{host}}/graphql
-content-type: application/json
-cookie: connect.sid={{sid}}
-
-< json/userWorkspaceMemberships.any.json
-
-###
-
-# @name userWorkspaceMemberships.gql
-# @no-cookie-jar
-# @no-log
-# @no-redirect
-GRAPHQL {{host}}/graphql
-cookie: connect.sid={{sid}}
-
-< graphql/userWorkspaceMemberships.gql
-{}
+//
+// Reverse engineering.
+//
 
 ###
 
@@ -358,3 +388,5 @@ cookie: connect.sid={{sid}}
 POST {{host}}/graphql
 content-type: application/json
 cookie: connect.sid={{sid}}
+
+###
