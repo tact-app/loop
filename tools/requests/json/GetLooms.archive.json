@@ -1,0 +1,14 @@
+{
+  "operationName": "GetLooms",
+  "variables": {
+    "limit": 12,
+    "cursor": null,
+    "folderId": null,
+    "source": "ARCHIVED",
+    "sortOrder": "DESC",
+    "sortType": "RECENT",
+    "filters": [],
+    "timeRange": null
+  },
+  "query": "query GetLooms($limit: Int!, $cursor: String, $folderId: String, $sourceValue: String, $source: LoomsSource!, $sortType: LoomsSortType!, $sortOrder: LoomsSortOrder!, $sortGrouping: LoomsSortGrouping, $filters: [[LoomsCollectionFilter!]!], $timeRange: TimeRange) {\n  getLooms {\n    __typename\n    ... on GetLoomsPayload {\n      videos(\n        first: $limit\n        after: $cursor\n        folderId: $folderId\n        sourceValue: $sourceValue\n        source: $source\n        sortType: $sortType\n        sortOrder: $sortOrder\n        sortGrouping: $sortGrouping\n        filters: $filters\n        timeRange: $timeRange\n      ) {\n        edges {\n          cursor\n          node {\n            ...videoCardFields\n            __typename\n          }\n          profileSort\n          __typename\n        }\n        pageInfo {\n          endCursor\n          hasNextPage\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n  }\n}\n\nfragment videoCardFields on RegularUserVideo {\n  id\n  name\n  complete\n  archived\n  createdAt\n  s3_id\n  totalReactions\n  totalComments\n  organization_id\n  currentUserHasWatched\n  views {\n    total\n    __typename\n  }\n  thumbnails {\n    default\n    defaultPlay\n    ogFull\n    full\n    fullPlay\n    defaultGif\n    defaultGifPlay\n    animatedPreview\n    __typename\n  }\n  owner {\n    first_name\n    last_name\n    id\n    avatars {\n      name\n      large\n      thumb\n      __typename\n    }\n    __typename\n  }\n  processing_information {\n    videoUploadValid\n    trim_id\n    __typename\n  }\n  video_properties {\n    thumbnail_is_png\n    duration\n    recording_version\n    trim_duration\n    __typename\n  }\n  organization {\n    name\n    __typename\n  }\n  owner_id\n  current_user_is_owner\n  download_enabled\n  currentUserCanEdit\n  tags\n  use_gif\n  visibility\n  allow_search_engine_indexing\n  is_protected\n  privacy\n  isCommunityLoom\n  spaceFolders {\n    id\n    name\n    special_id\n    owner_id\n    __typename\n  }\n  spaces {\n    name\n    id\n    isArchived\n    privacy\n    is_primary\n    __typename\n  }\n  folder {\n    id\n    name\n    special_id\n    owner_id\n    visibility\n    owner {\n      email\n      first_name\n      last_name\n      __typename\n    }\n    __typename\n  }\n  isCommunityLoom\n  __typename\n}\n"
+}
