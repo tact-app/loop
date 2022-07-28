@@ -1,0 +1,13 @@
+mutation ArchiveSpace($spaceId: ID!) {
+    archiveSpace(spaceId: $spaceId) {
+        __typename
+        ... on ArchiveSpacePayload {
+            __typename
+            success
+        }
+        ... on Error {
+            message
+            __typename
+        }
+    }
+}

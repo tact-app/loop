@@ -1,0 +1,7 @@
+{
+  "operationName": "ArchiveSpace",
+  "variables": {
+    "spaceId": "{{spaceId}}"
+  },
+  "query": "mutation ArchiveSpace($spaceId: ID!) {\n  archiveSpace(spaceId: $spaceId) {\n    __typename\n    ... on ArchiveSpacePayload {\n      __typename\n      success\n    }\n    ... on Error {\n      message\n      __typename\n    }\n  }\n}\n"
+}
