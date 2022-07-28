@@ -1,0 +1,36 @@
+mutation CreateSpace(
+    $name: String!
+    $privacy: SpacePrivacy
+    $userIds: [ID!]
+    $analyticsSource: String
+) {
+    createSpace(
+        name: $name
+        userIds: $userIds
+        privacy: $privacy
+        analyticsSource: $analyticsSource
+    ) {
+        __typename
+        ... on CreateSpacePayload {
+            __typename
+            space {
+                name
+                workspace_id
+                id
+                __typename
+            }
+        }
+        ... on Error {
+            message
+            __typename
+        }
+        ... on InputValidationError {
+            failedFields {
+                field
+                message
+                __typename
+            }
+            __typename
+        }
+    }
+}

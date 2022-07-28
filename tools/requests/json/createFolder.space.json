@@ -1,7 +1,7 @@
 {
   "operationName": "createFolder",
   "variables": {
-    "name": "from Loop",
+    "name": "Loop",
     "parentFolderId": "{{parentFolderId}}",
     "spaceId": "{{spaceId}}",
     "visibility": "workspace"

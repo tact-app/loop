@@ -2,7 +2,7 @@
   "operationName": "RenameFolder",
   "variables": {
     "folderId": "{{folderIdToRename}}",
-    "name": "from Loop II"
+    "name": "Loop"
   },
   "query": "mutation RenameFolder($folderId: ID!, $name: String!) {\n  renameFolder(folderId: $folderId, name: $name) {\n    __typename\n    ... on GenericError {\n      __typename\n      message\n    }\n    ... on RenameFolderPayload {\n      __typename\n      folder {\n        id\n        name\n        __typename\n      }\n    }\n  }\n}\n"
 }

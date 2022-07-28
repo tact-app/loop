@@ -60,6 +60,37 @@ cookie: connect.sid={{sid}}
 
 ###
 
+# @name CreateSpace.gql
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+GRAPHQL {{host}}/graphql
+cookie: connect.sid={{sid}}
+
+< graphql/CreateSpace.gql
+{
+  "name": "Loop",
+  "privacy": "workspace",
+  "userIds": [
+    "{{userId}}"
+  ],
+  "analyticsSource": "sidebar"
+}
+
+###
+
+# @name CreateSpace.private.json
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+POST {{host}}/graphql
+content-type: application/json
+cookie: connect.sid={{sid}}
+
+< json/CreateSpace.private.json
+
+###
+
 # @name GetMySpaceMemberships.gql
 # @no-cookie-jar
 # @no-log
@@ -223,7 +254,7 @@ cookie: connect.sid={{sid}}
 
 < graphql/createFolder.gql
 {
-  "name": "from Loop",
+  "name": "Loop",
   "parentFolderId": "{{parentFolderId}}",
   "visibility": "owner"
 }
@@ -252,7 +283,7 @@ cookie: connect.sid={{sid}}
 < graphql/RenameFolder.gql
 {
   "folderId": "{{folderIdToRename}}",
-  "name": "from Loop II"
+  "name": "Loop"
 }
 
 ###

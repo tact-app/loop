@@ -1,0 +1,12 @@
+{
+  "operationName": "CreateSpace",
+  "variables": {
+    "name": "Loop",
+    "privacy": null,
+    "userIds": [
+      "{{userId}}"
+    ],
+    "analyticsSource": "sidebar"
+  },
+  "query": "mutation CreateSpace($name: String!, $privacy: SpacePrivacy, $userIds: [ID!], $analyticsSource: String) {\n  createSpace(\n    name: $name\n    userIds: $userIds\n    privacy: $privacy\n    analyticsSource: $analyticsSource\n  ) {\n    __typename\n    ... on CreateSpacePayload {\n      __typename\n      space {\n        name\n        workspace_id\n        id\n        __typename\n      }\n    }\n    ... on Error {\n      message\n      __typename\n    }\n    ... on InputValidationError {\n      failedFields {\n        field\n        message\n        __typename\n      }\n      __typename\n    }\n  }\n}\n"
+}
