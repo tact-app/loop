@@ -1,5 +1,5 @@
 //
-// Working with workspace, users, and spaces.
+// Working with workspace and users.
 //
 
 ###
@@ -25,6 +25,38 @@ content-type: application/json
 cookie: connect.sid={{sid}}
 
 < json/userWorkspaceMemberships.any.json
+
+###
+
+# @name GetUserByIdWithProfile.gql
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+GRAPHQL {{host}}/graphql
+cookie: connect.sid={{sid}}
+
+< graphql/GetUserByIdWithProfile.gql
+{
+  "userId": {{userId}}
+}
+
+###
+
+# @name GetUserByIdWithProfile.root,archive.json
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+POST {{host}}/graphql
+content-type: application/json
+cookie: connect.sid={{sid}}
+
+< json/GetUserByIdWithProfile.root,archive.json
+
+###
+
+//
+// Working with spaces.
+//
 
 ###
 
@@ -78,32 +110,6 @@ content-type: application/json
 cookie: connect.sid={{sid}}
 
 < json/GetSpaceNameAndMembers.space.json
-
-###
-
-# @name GetUserByIdWithProfile.gql
-# @no-cookie-jar
-# @no-log
-# @no-redirect
-GRAPHQL {{host}}/graphql
-cookie: connect.sid={{sid}}
-
-< graphql/GetUserByIdWithProfile.gql
-{
-  "userId": {{userId}}
-}
-
-###
-
-# @name GetUserByIdWithProfile.root,archive.json
-# @no-cookie-jar
-# @no-log
-# @no-redirect
-POST {{host}}/graphql
-content-type: application/json
-cookie: connect.sid={{sid}}
-
-< json/GetUserByIdWithProfile.root,archive.json
 
 ###
 
