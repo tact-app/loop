@@ -169,6 +169,32 @@ cookie: connect.sid={{sid}}
 
 ###
 
+# @name GetWorkspaceArchivedSpaces.gql
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+GRAPHQL {{host}}/graphql
+cookie: connect.sid={{sid}}
+
+< graphql/GetWorkspaceArchivedSpaces.gql
+{
+  "first": 1000
+}
+
+###
+
+# @name GetWorkspaceArchivedSpaces.json
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+POST {{host}}/graphql
+content-type: application/json
+cookie: connect.sid={{sid}}
+
+< json/GetWorkspaceArchivedSpaces.json
+
+###
+
 # @name GetSpaceNameAndMembers.gql
 # @no-cookie-jar
 # @no-log

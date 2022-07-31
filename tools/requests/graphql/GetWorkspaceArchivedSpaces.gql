@@ -1,0 +1,36 @@
+query GetWorkspaceArchivedSpaces(
+    $first: Int!
+    $after: String
+) {
+    result: getWorkspaceArchivedSpaces {
+        __typename
+        ... on GetWorkspaceArchivedSpacesPayload {
+            spaces(first: $first, after: $after) {
+                nodes {
+                    ...SpaceFragment
+                    __typename
+                }
+                pageInfo {
+                    endCursor
+                    hasNextPage
+                    __typename
+                }
+                __typename
+            }
+            __typename
+        }
+    }
+}
+
+fragment SpaceFragment on Space {
+    id
+    name
+    workspace_id
+    privacy
+    is_primary
+    totalVideos
+    membersCount
+    currentUserIsMember
+    isArchived
+    __typename
+}

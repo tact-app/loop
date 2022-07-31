@@ -1,0 +1,7 @@
+{
+  "operationName": "GetWorkspaceArchivedSpaces",
+  "variables": {
+    "first": 1000
+  },
+  "query": "query GetWorkspaceArchivedSpaces($first: Int!, $after: String) {\n  result: getWorkspaceArchivedSpaces {\n    __typename\n    ... on GetWorkspaceArchivedSpacesPayload {\n      spaces(first: $first, after: $after) {\n        nodes {\n          ...SpaceFragment\n          __typename\n        }\n        pageInfo {\n          endCursor\n          hasNextPage\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n  }\n}\n\nfragment SpaceFragment on Space {\n  id\n  name\n  workspace_id\n  privacy\n  is_primary\n  totalVideos\n  membersCount\n  currentUserIsMember\n  isArchived\n  __typename\n}\n"
+}
