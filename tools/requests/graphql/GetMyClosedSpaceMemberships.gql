@@ -1,0 +1,48 @@
+query GetMyClosedSpaceMemberships(
+    $first: Int!
+    $after: String
+) {
+    result: getMyClosedSpaceMemberships {
+        __typename
+        ... on GetMyClosedSpaceMembershipsPayload {
+            memberships(first: $first, after: $after) {
+                edges {
+                    node {
+                        id
+                        unread
+                        space {
+                            ...SpaceFragment
+                            __typename
+                        }
+                        __typename
+                    }
+                    __typename
+                }
+                pageInfo {
+                    endCursor
+                    hasNextPage
+                    __typename
+                }
+                __typename
+            }
+            __typename
+        }
+        ... on Error {
+            message
+            __typename
+        }
+    }
+}
+
+fragment SpaceFragment on Space {
+    id
+    name
+    workspace_id
+    privacy
+    is_primary
+    totalVideos
+    membersCount
+    currentUserIsMember
+    isArchived
+    __typename
+}

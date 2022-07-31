@@ -1,0 +1,7 @@
+{
+  "operationName": "GetMyClosedSpaceMemberships",
+  "variables": {
+    "first": 15
+  },
+  "query": "query GetMyClosedSpaceMemberships($first: Int!, $after: String) {\n  result: getMyClosedSpaceMemberships {\n    __typename\n    ... on GetMyClosedSpaceMembershipsPayload {\n      memberships(first: $first, after: $after) {\n        edges {\n          node {\n            id\n            unread\n            space {\n              ...SpaceFragment\n              __typename\n            }\n            __typename\n          }\n          __typename\n        }\n        pageInfo {\n          endCursor\n          hasNextPage\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    ... on Error {\n      message\n      __typename\n    }\n  }\n}\n\nfragment SpaceFragment on Space {\n  id\n  name\n  workspace_id\n  privacy\n  is_primary\n  totalVideos\n  membersCount\n  currentUserIsMember\n  isArchived\n  __typename\n}\n"
+}
