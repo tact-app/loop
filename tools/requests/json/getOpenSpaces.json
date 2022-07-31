@@ -1,0 +1,7 @@
+{
+  "operationName": "getOpenSpaces",
+  "variables": {
+    "first": 15
+  },
+  "query": "query getOpenSpaces($first: Int!, $after: String) {\n  result: getOpenSpaces {\n    __typename\n    ... on GetOpenSpacesPayload {\n      spaces(first: $first, after: $after) {\n        edges {\n          node {\n            ...SpaceFragment\n            __typename\n          }\n          __typename\n        }\n        pageInfo {\n          endCursor\n          hasNextPage\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    ... on Error {\n      message\n      __typename\n    }\n  }\n}\n\nfragment SpaceFragment on Space {\n  id\n  name\n  workspace_id\n  privacy\n  is_primary\n  totalVideos\n  membersCount\n  currentUserIsMember\n  isArchived\n  __typename\n}\n"
+}
