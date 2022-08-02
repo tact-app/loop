@@ -1,0 +1,23 @@
+mutation JoinSpace(
+    $spaceId: ID!
+    $analyticsSource: String
+) {
+    joinSpace(
+        spaceId: $spaceId
+        analyticsSource: $analyticsSource
+    ) {
+        __typename
+        ... on JoinSpacePayload {
+            __typename
+            success
+            space {
+                name
+                __typename
+            }
+        }
+        ... on Error {
+            message
+            __typename
+        }
+    }
+}

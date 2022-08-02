@@ -274,6 +274,33 @@ cookie: connect.sid={{sid}}
 
 ###
 
+# @name JoinSpace.gql
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+GRAPHQL {{host}}/graphql
+cookie: connect.sid={{sid}}
+
+< graphql/JoinSpace.gql
+{
+  "spaceId": "{{spaceId}}",
+  "analyticsSource": "browse"
+}
+
+###
+
+# @name JoinSpace.json
+# @no-cookie-jar
+# @no-log
+# @no-redirect
+POST {{host}}/graphql
+content-type: application/json
+cookie: connect.sid={{sid}}
+
+< json/JoinSpace.json
+
+###
+
 //
 // Working with folder structure.
 //

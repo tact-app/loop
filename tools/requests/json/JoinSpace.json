@@ -1,0 +1,8 @@
+{
+  "operationName": "JoinSpace",
+  "variables": {
+    "spaceId": "{{spaceId}}",
+    "analyticsSource": "browse"
+  },
+  "query": "mutation JoinSpace($spaceId: ID!, $analyticsSource: String) {\n  joinSpace(spaceId: $spaceId, analyticsSource: $analyticsSource) {\n    __typename\n    ... on JoinSpacePayload {\n      __typename\n      success\n      space {\n        name\n        __typename\n      }\n    }\n    ... on Error {\n      message\n      __typename\n    }\n  }\n}\n"
+}
