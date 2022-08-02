@@ -1,0 +1,8 @@
+{
+  "operationName": "LeaveSpace",
+  "variables": {
+    "spaceId": "{{spaceId}}",
+    "analyticsSource": "space_page"
+  },
+  "query": "mutation LeaveSpace($spaceId: ID!, $analyticsSource: String) {\n  leaveSpace(spaceId: $spaceId, analyticsSource: $analyticsSource) {\n    __typename\n    ... on LeaveSpacePayload {\n      __typename\n      success\n      space {\n        name\n        __typename\n      }\n    }\n    ... on Error {\n      message\n      __typename\n    }\n  }\n}\n"
+}

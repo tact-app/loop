@@ -1,0 +1,20 @@
+mutation LeaveSpace(
+    $spaceId: ID!
+    $analyticsSource: String
+) {
+    leaveSpace(spaceId: $spaceId, analyticsSource: $analyticsSource) {
+        __typename
+        ... on LeaveSpacePayload {
+            __typename
+            success
+            space {
+                name
+                __typename
+            }
+        }
+        ... on Error {
+            message
+            __typename
+        }
+    }
+}
