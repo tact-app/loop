@@ -1,0 +1,7 @@
+{
+  "operationName": "UnarchiveSpace",
+  "variables": {
+    "spaceId": "{{spaceId}}"
+  },
+  "query": "mutation UnarchiveSpace($spaceId: ID!) {\n  unarchiveSpace(spaceId: $spaceId) {\n    __typename\n    ... on UnarchiveSpacePayload {\n      __typename\n      success\n    }\n    ... on Error {\n      message\n      __typename\n    }\n  }\n}\n"
+}
