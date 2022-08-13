@@ -1,0 +1,34 @@
+query userWorkspaceMemberships {
+    userWorkspaceMemberships {
+        member_role
+        createdAt
+        isSelected
+        organization {
+            id
+            name
+            type
+            workspaceLogoPath
+            organization_properties
+            limits
+            counts {
+                videos
+                screenshots
+                users
+                folders
+                unseenNotifications
+                spaces {
+                    total_active_spaces
+                }
+            }
+            member_roles {
+                value
+                name
+                inviteable
+                is_free
+            }
+        }
+        was_loom_user_before_membership
+        onboarding
+        member_limits
+    }
+}
