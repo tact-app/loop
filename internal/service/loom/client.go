@@ -43,6 +43,7 @@ func (c Client) Do(
 	ctx context.Context,
 	operation operation,
 	vars map[string]interface{},
+	out interface{},
 ) error {
 	file, err := operations.Open(fmt.Sprintf("operations/%s.gql", operation))
 	if err != nil {
@@ -75,8 +76,7 @@ func (c Client) Do(
 		return err
 	}
 	defer func() { _, _ = io.Copy(io.Discard, resp.Body) }()
-	var r map[string]interface{}
-	if err := json.NewDecoder(resp.Body).Decode(&r); err != nil {
+	if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
 		return err
 	}
 	return nil
