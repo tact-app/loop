@@ -7,9 +7,11 @@ package tools
 import (
 	_ "github.com/golang/mock/mockgen"
 	_ "github.com/golangci/golangci-lint/cmd/golangci-lint"
+	_ "github.com/twpayne/go-jsonstruct/v2/cmd/gojsonstruct"
 	_ "golang.org/x/tools/cmd/goimports"
 )
 
 //go:generate go install github.com/golang/mock/mockgen
 //go:generate go install github.com/golangci/golangci-lint/cmd/golangci-lint
+//go:generate go install github.com/twpayne/go-jsonstruct/v2/cmd/gojsonstruct
 //go:generate go install golang.org/x/tools/cmd/goimports
