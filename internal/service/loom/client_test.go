@@ -2,6 +2,7 @@ package loom
 
 import (
 	"context"
+	"net/http"
 	"os"
 
 	"go.octolab.org/tact/loop/internal/service/loom/dto"
@@ -9,9 +10,8 @@ import (
 
 func ExampleClient_Do() {
 	var resp dto.UserWorkspaceMemberships
-	cl, _ := NewClient("https://www.loom.com/graphql", os.Getenv("LOOM_TOKEN"))
+	cl, _ := NewClient(new(http.Client), "https://www.loom.com/graphql", os.Getenv("LOOM_TOKEN"))
 	_ = cl.Do(context.Background(), UserWorkspaceMemberships, nil, &resp)
-	_ = resp
 
 	// output:
 	//

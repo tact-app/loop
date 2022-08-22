@@ -8,21 +8,25 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"go.octolab.org/unsafe"
+
+	xio "go.octolab.org/tact/loop/internal/pkg/io"
 )
+
+//go:embed operations/*.gql
+var operations embed.FS
+
+type operation string
 
 const (
 	UserWorkspaceMemberships operation = "userWorkspaceMemberships"
 )
 
-type operation string
-
-//go:embed operations/*.gql
-var operations embed.FS
-
-func NewClient(endpoint, token string) (*Client, error) {
+func NewClient(client HttpClient, endpoint, token string) (*Client, error) {
 	req, err := http.NewRequestWithContext(context.Background(), http.MethodPost, endpoint, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("init http request: %w", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.AddCookie(&http.Cookie{
@@ -30,12 +34,11 @@ func NewClient(endpoint, token string) (*Client, error) {
 		Value: token,
 	})
 
-	cl := new(http.Client)
-	return &Client{c: cl, r: req}, nil
+	return &Client{c: client, r: req}, nil
 }
 
 type Client struct {
-	c *http.Client
+	c HttpClient
 	r *http.Request
 }
 
@@ -47,12 +50,13 @@ func (c Client) Do(
 ) error {
 	file, err := operations.Open(fmt.Sprintf("operations/%s.gql", operation))
 	if err != nil {
-		return err
+		return fmt.Errorf("unknown operation %s: %w", operation, err)
 	}
+	defer xio.WillClose(file, unsafe.Ignore)
 
 	query, err := io.ReadAll(file)
 	if err != nil {
-		return err
+		return fmt.Errorf("read operation %s: %w", operation, err)
 	}
 
 	payload := struct {
@@ -66,18 +70,19 @@ func (c Client) Do(
 	}
 	body := bytes.NewBuffer(nil)
 	if err := json.NewEncoder(body).Encode(payload); err != nil {
-		return err
+		return fmt.Errorf("encode operation body %s: %w", operation, err)
 	}
 	req := c.r.Clone(ctx)
 	req.Body = io.NopCloser(body)
 
 	resp, err := c.c.Do(req)
 	if err != nil {
-		return err
+		return fmt.Errorf("execute operation %s: %w", operation, err)
 	}
-	defer func() { _, _ = io.Copy(io.Discard, resp.Body) }()
+	defer xio.WillDiscard(resp.Body, unsafe.Ignore)
+
 	if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
-		return err
+		return fmt.Errorf("decode response %s: %w", operation, err)
 	}
 	return nil
 }
