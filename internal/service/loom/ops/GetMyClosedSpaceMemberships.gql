@@ -1,0 +1,25 @@
+query GetMyClosedSpaceMemberships(
+    $first: Int!
+    $after: String
+) {
+    result: getMyClosedSpaceMemberships {
+        ... on GetMyClosedSpaceMembershipsPayload {
+            memberships(first: $first, after: $after) {
+                edges {
+                    node {
+                        id
+                        space {
+                            id
+                            name
+                            privacy
+                            is_primary
+                        }
+                    }
+                }
+            }
+        }
+        ... on Error {
+            message
+        }
+    }
+}

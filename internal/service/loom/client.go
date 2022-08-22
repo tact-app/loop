@@ -14,13 +14,16 @@ import (
 	xio "go.octolab.org/tact/loop/internal/pkg/io"
 )
 
-//go:embed operations/*.gql
+//go:embed ops/*.gql
 var operations embed.FS
 
-type operation string
+type Operation string
 
 const (
-	UserWorkspaceMemberships operation = "userWorkspaceMemberships"
+	ArchivedSpaces           Operation = "GetWorkspaceArchivedSpaces"
+	ClosedSpaces             Operation = "GetMyClosedSpaceMemberships"
+	OpenSpaces               Operation = "getOpenSpaces"
+	UserWorkspaceMemberships Operation = "userWorkspaceMemberships"
 )
 
 func NewClient(client HttpClient, endpoint, token string) (*Client, error) {
@@ -42,13 +45,13 @@ type Client struct {
 	r *http.Request
 }
 
-func (c Client) Do(
+func (c *Client) Do(
 	ctx context.Context,
-	operation operation,
+	operation Operation,
 	vars map[string]interface{},
 	out interface{},
 ) error {
-	file, err := operations.Open(fmt.Sprintf("operations/%s.gql", operation))
+	file, err := operations.Open(fmt.Sprintf("ops/%s.gql", operation))
 	if err != nil {
 		return fmt.Errorf("unknown operation %s: %w", operation, err)
 	}

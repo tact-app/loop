@@ -1,0 +1,19 @@
+query getOpenSpaces($first: Int!, $after: String) {
+    result: getOpenSpaces {
+        ... on GetOpenSpacesPayload {
+            spaces(first: $first, after: $after) {
+                edges {
+                    node {
+                        id
+                        name
+                        privacy
+                        is_primary
+                    }
+                }
+            }
+        }
+        ... on Error {
+            message
+        }
+    }
+}

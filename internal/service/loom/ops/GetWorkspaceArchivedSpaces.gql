@@ -1,0 +1,20 @@
+query GetWorkspaceArchivedSpaces(
+    $first: Int!
+    $after: String
+) {
+    result: getWorkspaceArchivedSpaces {
+        ... on GetWorkspaceArchivedSpacesPayload {
+            spaces(first: $first, after: $after) {
+                nodes {
+                    id
+                    name
+                    privacy
+                    is_primary
+                }
+            }
+        }
+        ... on Error {
+            message
+        }
+    }
+}

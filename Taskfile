@@ -12,6 +12,27 @@ config['dryrun']=false
 
 function dto() {
   cat \
+    tools/loom/responses/GetMyClosedSpaceMemberships.json \
+    tools/loom/responses/GetMyClosedSpaceMemberships.err.json |
+    gojsonstruct \
+      -packagename dto \
+      -typename ClosedSpaces \
+      >internal/service/loom/dto/mcs.go
+  cat \
+    tools/loom/responses/getOpenSpaces.json \
+    tools/loom/responses/getOpenSpaces.err.json |
+    gojsonstruct \
+      -packagename dto \
+      -typename OpenSpaces \
+      >internal/service/loom/dto/wos.go
+  cat \
+    tools/loom/responses/GetWorkspaceArchivedSpaces.json \
+    tools/loom/responses/GetWorkspaceArchivedSpaces.err.json |
+    gojsonstruct \
+      -packagename dto \
+      -typename ArchivedSpaces \
+      >internal/service/loom/dto/was.go
+  cat \
     tools/loom/responses/userWorkspaceMemberships.json \
     tools/loom/responses/userWorkspaceMemberships.err.json |
     gojsonstruct \

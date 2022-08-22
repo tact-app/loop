@@ -1,7 +1,14 @@
 package loom
 
-import "net/http"
+import (
+	"context"
+	"net/http"
+)
 
 type HttpClient interface {
-	Do(req *http.Request) (*http.Response, error)
+	Do(*http.Request) (*http.Response, error)
+}
+
+type ServiceClient interface {
+	Do(context.Context, Operation, map[string]interface{}, interface{}) error
 }

@@ -1,17 +1,13 @@
 package command
 
-import (
-	"github.com/spf13/cobra"
-
-	"go.octolab.org/tact/loop/internal/command/demo"
-)
+import "github.com/spf13/cobra"
 
 // New returns the new root command.
 func New() *cobra.Command {
 	command := cobra.Command{
-		Use:   "%template%",
-		Short: "%template%",
-		Long:  "%template%",
+		Use:   "loop",
+		Short: "manage loom org",
+		Long:  "Manage loom organization.",
 
 		Args: cobra.NoArgs,
 
@@ -19,12 +15,7 @@ func New() *cobra.Command {
 		SilenceUsage:  true,
 	}
 
-	/* configure instance */
-	command.AddCommand(
-		demo.Panic(),
-		demo.Stderr(),
-		demo.Stdout(),
-	)
+	command.AddCommand(Tree())
 
 	return &command
 }
