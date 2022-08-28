@@ -19,12 +19,27 @@ var operations embed.FS
 
 type Operation string
 
+func (op Operation) Name() string {
+	name := string(op)
+	if alias, has := aliases[name]; has {
+		return alias
+	}
+	return name
+}
+
 const (
-	ArchivedSpaces           Operation = "GetWorkspaceArchivedSpaces"
-	ClosedSpaces             Operation = "GetMyClosedSpaceMemberships"
-	OpenSpaces               Operation = "getOpenSpaces"
+	ArchivedSpaces Operation = "get-archived-spaces"
+	PrivateSpaces  Operation = "get-private-spaces"
+	PublicSpaces   Operation = "get-public-spaces"
+
 	UserWorkspaceMemberships Operation = "userWorkspaceMemberships"
 )
+
+var aliases = map[string]string{
+	"get-archived-spaces": "GetWorkspaceArchivedSpaces",
+	"get-private-spaces":  "GetMyClosedSpaceMemberships",
+	"get-public-spaces":   "getOpenSpaces",
+}
 
 func NewClient(client HttpClient, endpoint, token string) (*Client, error) {
 	req, err := http.NewRequestWithContext(context.Background(), http.MethodPost, endpoint, nil)
@@ -67,7 +82,7 @@ func (c *Client) Do(
 		Query         string                 `json:"query"`
 		Variables     map[string]interface{} `json:"variables"`
 	}{
-		OperationName: string(operation),
+		OperationName: operation.Name(),
 		Query:         string(query),
 		Variables:     vars,
 	}

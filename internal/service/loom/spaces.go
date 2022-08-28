@@ -11,15 +11,15 @@ import (
 	"go.octolab.org/tact/loop/internal/service/loom/dto"
 )
 
-func (s *Service) spaces(ctx context.Context) ([]domain.Space, error) {
+func (s *Service) spaces(ctx context.Context, workspaceID int) ([]domain.Space, error) {
 	var mu sync.Mutex
 	index := make(map[string]domain.Space)
 	limit := map[string]interface{}{"first": 1000}
 
 	g, ctx := errgroup.WithContext(ctx)
 	g.Go(func() error {
-		var r dto.OpenSpaces
-		if err := s.c.Do(ctx, OpenSpaces, limit, &r); err != nil {
+		var r dto.PublicSpaces
+		if err := s.c.Do(ctx, PublicSpaces, limit, &r); err != nil {
 			return fmt.Errorf("fetch open spaces: %w", err)
 		}
 		if err := r.Data.Result.Message; err != "" {
@@ -28,6 +28,9 @@ func (s *Service) spaces(ctx context.Context) ([]domain.Space, error) {
 
 		mu.Lock()
 		for _, edge := range r.Data.Result.Spaces.Edges {
+			if edge.Node.WorkspaceID != workspaceID {
+				continue
+			}
 			index[edge.Node.ID] = domain.Space{
 				ID:        edge.Node.ID,
 				Name:      edge.Node.Name,
@@ -39,8 +42,8 @@ func (s *Service) spaces(ctx context.Context) ([]domain.Space, error) {
 		return nil
 	})
 	g.Go(func() error {
-		var r dto.ClosedSpaces
-		if err := s.c.Do(ctx, ClosedSpaces, limit, &r); err != nil {
+		var r dto.PrivateSpaces
+		if err := s.c.Do(ctx, PrivateSpaces, limit, &r); err != nil {
 			return fmt.Errorf("fetch closed spaces: %w", err)
 		}
 		if err := r.Data.Result.Message; err != "" {
@@ -49,6 +52,9 @@ func (s *Service) spaces(ctx context.Context) ([]domain.Space, error) {
 
 		mu.Lock()
 		for _, edge := range r.Data.Result.Memberships.Edges {
+			if edge.Node.Space.WorkspaceID != workspaceID {
+				continue
+			}
 			index[edge.Node.Space.ID] = domain.Space{
 				ID:        edge.Node.Space.ID,
 				Name:      edge.Node.Space.Name,
@@ -70,6 +76,9 @@ func (s *Service) spaces(ctx context.Context) ([]domain.Space, error) {
 
 		mu.Lock()
 		for _, node := range r.Data.Result.Spaces.Nodes {
+			if node.WorkspaceID != workspaceID {
+				continue
+			}
 			index[node.ID] = domain.Space{
 				ID:        node.ID,
 				Name:      node.Name,

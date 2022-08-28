@@ -8,8 +8,14 @@ query GetWorkspaceArchivedSpaces(
                 nodes {
                     id
                     name
+                    workspace_id
                     privacy
                     is_primary
+                    totalVideos
+                }
+                pageInfo {
+                    endCursor
+                    hasNextPage
                 }
             }
         }

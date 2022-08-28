@@ -15,13 +15,13 @@ type Service struct {
 	c ServiceClient
 }
 
-func (s *Service) Tree(ctx context.Context) (*domain.Tree, error) {
+func (s *Service) Tree(ctx context.Context, workspaceID int) (*domain.Tree, error) {
 	var (
 		tree domain.Tree
 		err  error
 	)
 
-	tree.Spaces, err = s.spaces(ctx)
+	tree.Spaces, err = s.spaces(ctx, workspaceID)
 	if err != nil {
 		return nil, fmt.Errorf("fetch tree: %w", err)
 	}

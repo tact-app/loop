@@ -16,15 +16,15 @@ function dto() {
     tools/loom/responses/GetMyClosedSpaceMemberships.err.json |
     gojsonstruct \
       -packagename dto \
-      -typename ClosedSpaces \
-      >internal/service/loom/dto/mcs.go
+      -typename PrivateSpaces \
+      >internal/service/loom/dto/mps.go
   cat \
     tools/loom/responses/getOpenSpaces.json \
     tools/loom/responses/getOpenSpaces.err.json |
     gojsonstruct \
       -packagename dto \
-      -typename OpenSpaces \
-      >internal/service/loom/dto/wos.go
+      -typename PublicSpaces \
+      >internal/service/loom/dto/wps.go
   cat \
     tools/loom/responses/GetWorkspaceArchivedSpaces.json \
     tools/loom/responses/GetWorkspaceArchivedSpaces.err.json |
@@ -32,6 +32,7 @@ function dto() {
       -packagename dto \
       -typename ArchivedSpaces \
       >internal/service/loom/dto/was.go
+
   cat \
     tools/loom/responses/userWorkspaceMemberships.json \
     tools/loom/responses/userWorkspaceMemberships.err.json |

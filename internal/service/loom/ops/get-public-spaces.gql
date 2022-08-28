@@ -6,9 +6,15 @@ query getOpenSpaces($first: Int!, $after: String) {
                     node {
                         id
                         name
+                        workspace_id
                         privacy
                         is_primary
+                        totalVideos
                     }
+                }
+                pageInfo {
+                    endCursor
+                    hasNextPage
                 }
             }
         }
