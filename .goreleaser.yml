@@ -1,49 +1,45 @@
 ---
-project_name: %template%
+project_name: loop
 
 archives:
-  - id: %template%
+  - id: loop
     files:
       - LICENSE
     format: tar.gz
     name_template: "{{.Binary}}_{{.Version}}_{{.Os}}-{{.Arch}}"
-    replacements:
-      amd64: 64bit_x86
-      arm64: 64bit_arm
-      darwin: macOS
-      linux: Linux
+    rlcp: true
 
 brews:
-  - name: %template%
-    caveats: %template%
+  - name: loop
+    caveats: ''
     commit_author:
       name: Kamil Samigullin
       email: kamil@samigullin.info
-    description: %template%
+    description: Loom structure fetcher.
     folder: Formula
-    homepage: %template%
+    homepage: https://github.com/tact-app/loop
     tap:
-      owner: %template%
-      name: %template%
+      owner: tact-app
+      name: homebrew-tap
     install: |
-      bin.install "%template%"
+      bin.install "loop"
 
-      output = Utils.popen_read("#{bin}/%template% completion bash")
-      (bash_completion/"%template%").write output
+      output = Utils.popen_read("#{bin}/loop completion bash")
+      (bash_completion/loop).write output
 
-      output = Utils.popen_read("#{bin}/%template% completion fish")
-      (fish_completion/"%template%.fish").write output
+      output = Utils.popen_read("#{bin}/loop completion fish")
+      (fish_completion/loop.fish).write output
 
-      output = Utils.popen_read("#{bin}/%template% completion zsh")
-      (zsh_completion/"_%template%").write output
+      output = Utils.popen_read("#{bin}/loop completion zsh")
+      (zsh_completion/_loop).write output
 
       prefix.install_metafiles
     test: |
-      system "#{bin}/%template% version"
+      system "#{bin}/loop version"
 
 builds:
-  - id: %template%
-    binary: %template%
+  - id: loop
+    binary: loop
     env:
       - CGO_ENABLED=0
     flags:
@@ -62,5 +58,5 @@ checksum: { name_template: checksums.txt }
 
 release:
   github:
-    owner: %template%
-    name: %template%
+    owner: tact-app
+    name: loop

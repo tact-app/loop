@@ -7,9 +7,6 @@
 
 set -euo pipefail
 
-declare -A config
-config['dryrun']=false
-
 function dto() {
   cat \
     tools/loom/responses/GetMyClosedSpaceMemberships.json \
@@ -43,6 +40,9 @@ function dto() {
   make format
 }
 
+declare -A config
+config['dryrun']=false
+
 _() {
   if ${config['dryrun']}; then
     echo "${@}"
@@ -63,7 +63,7 @@ EOF
   compgen -A function | grep -Ev '^(@|_)' | sort | cat -n
 }
 
-function main() {
+function @main() {
   if [[ "${1:-}" =~ ^--dry-run|-d$ ]]; then
     config['dryrun']=true
     shift
@@ -71,4 +71,4 @@ function main() {
   "${@:-@usage}"
 }
 
-main "${@}"
+@main "${@}"
