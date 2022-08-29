@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type UserWorkspaces struct {
+type Workspaces struct {
 	Data struct {
 		UserWorkspaceMemberships []struct {
 			CreatedAt    time.Time `json:"createdAt"`
