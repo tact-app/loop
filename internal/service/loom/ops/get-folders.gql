@@ -1,0 +1,87 @@
+query GetPublishedFolders(
+    $first: Int!
+    $after: String
+    $source: FolderSource!
+    $sourceValue: String
+    $sortType: LoomsSortType!
+    $sortOrder: LoomsSortOrder!
+    $parentFolderId: String
+    $workspaceId: ID
+    $filters: [LoomsCollectionFilter!]
+    $timeRange: TimeRange
+) {
+    getPublishedFolders {
+        ... on GetPublishedFoldersPayload {
+            folders(
+                first: $first
+                after: $after
+                source: $source
+                sourceValue: $sourceValue
+                sortType: $sortType
+                sortOrder: $sortOrder
+                parentFolderId: $parentFolderId
+                workspaceId: $workspaceId
+                filters: $filters
+                timeRange: $timeRange
+            ) {
+                totalCount
+                edges {
+                    cursor
+                    node {
+                        ...FolderFragment
+                    }
+                }
+                pageInfo {
+                    endCursor
+                    hasNextPage
+                }
+            }
+        }
+    }
+}
+
+fragment FolderFragment on RegularUserFolder {
+    id
+    contentLastUpdated
+    isArchived
+    currentUserCanEdit
+    name
+    organization_id
+    owner_id
+    shared
+    special_id
+    visibility
+    totalNestedVideos
+    isTopLevelFolder
+    hasSubFolders
+    hasDuplicateInSpaces
+    space {
+        id
+        name
+        is_primary
+    }
+    owner {
+        email
+        first_name
+        last_name
+        avatars {
+            name
+            thumb
+        }
+    }
+    organization {
+        id
+        name
+    }
+    parent_folder {
+        id
+        name
+        special_id
+        owner_id
+        owner {
+            email
+            first_name
+            last_name
+        }
+    }
+}

@@ -28,17 +28,19 @@ func (op Operation) Name() string {
 }
 
 const (
+	Workspaces     Operation = "get-workspaces"
 	ArchivedSpaces Operation = "get-archived-spaces"
 	PrivateSpaces  Operation = "get-private-spaces"
 	PublicSpaces   Operation = "get-public-spaces"
-	UserWorkspaces Operation = "get-user-workspaces"
+	Folders        Operation = "get-folders"
 )
 
 var aliases = map[string]string{
+	"get-workspaces":      "userWorkspaceMemberships",
 	"get-archived-spaces": "GetWorkspaceArchivedSpaces",
 	"get-private-spaces":  "GetMyClosedSpaceMemberships",
 	"get-public-spaces":   "getOpenSpaces",
-	"get-user-workspaces": "userWorkspaceMemberships",
+	"get-folders":         "GetPublishedFolders",
 }
 
 func NewClient(client HttpClient, endpoint, token string) (*Client, error) {
@@ -60,47 +62,42 @@ type Client struct {
 	r *http.Request
 }
 
-func (c *Client) Do(
-	ctx context.Context,
-	operation Operation,
-	vars map[string]interface{},
-	out interface{},
-) error {
-	file, err := operations.Open(fmt.Sprintf("ops/%s.gql", operation))
+func (c *Client) Do(ctx context.Context, op Operation, vars Vars, out Pointer) error {
+	file, err := operations.Open(fmt.Sprintf("ops/%s.gql", op))
 	if err != nil {
-		return fmt.Errorf("unknown operation %s: %w", operation, err)
+		return fmt.Errorf("unknown operation %s: %w", op, err)
 	}
 	defer xio.WillClose(file, unsafe.Ignore)
 
 	query, err := io.ReadAll(file)
 	if err != nil {
-		return fmt.Errorf("read operation %s: %w", operation, err)
+		return fmt.Errorf("read operation %s: %w", op, err)
 	}
 
 	payload := struct {
-		OperationName string                 `json:"operationName"`
-		Query         string                 `json:"query"`
-		Variables     map[string]interface{} `json:"variables"`
+		OperationName string `json:"operationName"`
+		Query         string `json:"query"`
+		Variables     Vars   `json:"variables"`
 	}{
-		OperationName: operation.Name(),
+		OperationName: op.Name(),
 		Query:         string(query),
 		Variables:     vars,
 	}
 	body := bytes.NewBuffer(nil)
 	if err := json.NewEncoder(body).Encode(payload); err != nil {
-		return fmt.Errorf("encode operation body %s: %w", operation, err)
+		return fmt.Errorf("encode operation body %s: %w", op, err)
 	}
 	req := c.r.Clone(ctx)
 	req.Body = io.NopCloser(body)
 
 	resp, err := c.c.Do(req)
 	if err != nil {
-		return fmt.Errorf("execute operation %s: %w", operation, err)
+		return fmt.Errorf("execute operation %s: %w", op, err)
 	}
 	defer xio.WillDiscard(resp.Body, unsafe.Ignore)
 
 	if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
-		return fmt.Errorf("decode response %s: %w", operation, err)
+		return fmt.Errorf("decode response %s: %w", op, err)
 	}
 	return nil
 }
