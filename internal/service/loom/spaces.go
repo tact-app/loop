@@ -3,15 +3,35 @@ package loom
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"sync"
 
 	"golang.org/x/sync/errgroup"
 
 	"go.octolab.org/tact/loop/internal/domain"
+	"go.octolab.org/tact/loop/internal/pkg/unsafe"
 	"go.octolab.org/tact/loop/internal/service/loom/dto"
 )
 
-func (s *Service) spaces(ctx context.Context, workspaceID int) ([]domain.Space, error) {
+func (s *Service) workspaces(ctx context.Context) ([]domain.Workspace, error) {
+	var r dto.UserWorkspaces
+	if err := s.c.Do(ctx, UserWorkspaces, nil, &r); err != nil {
+		return nil, fmt.Errorf("fetch user workspaces: %w", err)
+	}
+
+	workspaces := make([]domain.Workspace, 0, len(r.Data.UserWorkspaceMemberships))
+	for _, workspace := range r.Data.UserWorkspaceMemberships {
+		workspaces = append(workspaces, domain.Workspace{
+			ID:     unsafe.ReturnInt(strconv.Atoi(workspace.Organization.ID)),
+			Name:   workspace.Organization.Name,
+			Type:   workspace.Organization.Type,
+			Spaces: make([]domain.Space, 0, workspace.Organization.Counts.Spaces.TotalActiveSpaces),
+		})
+	}
+	return workspaces, nil
+}
+
+func (s *Service) spaces(ctx context.Context) ([]domain.Space, error) {
 	var mu sync.Mutex
 	index := make(map[string]domain.Space)
 	limit := map[string]interface{}{"first": 1000}
@@ -28,14 +48,13 @@ func (s *Service) spaces(ctx context.Context, workspaceID int) ([]domain.Space, 
 
 		mu.Lock()
 		for _, edge := range r.Data.Result.Spaces.Edges {
-			if edge.Node.WorkspaceID != workspaceID {
-				continue
-			}
+			space := edge.Node
 			index[edge.Node.ID] = domain.Space{
-				ID:        edge.Node.ID,
-				Name:      edge.Node.Name,
-				IsPrivate: edge.Node.Privacy != "workspace",
-				IsPrimary: edge.Node.IsPrimary,
+				ID:          unsafe.ReturnInt(strconv.Atoi(space.ID)),
+				Name:        space.Name,
+				IsPrivate:   space.Privacy != "workspace",
+				IsPrimary:   space.IsPrimary,
+				WorkspaceID: space.WorkspaceID,
 			}
 		}
 		mu.Unlock()
@@ -52,14 +71,13 @@ func (s *Service) spaces(ctx context.Context, workspaceID int) ([]domain.Space, 
 
 		mu.Lock()
 		for _, edge := range r.Data.Result.Memberships.Edges {
-			if edge.Node.Space.WorkspaceID != workspaceID {
-				continue
-			}
+			space := edge.Node.Space
 			index[edge.Node.Space.ID] = domain.Space{
-				ID:        edge.Node.Space.ID,
-				Name:      edge.Node.Space.Name,
-				IsPrivate: edge.Node.Space.Privacy == nil,
-				IsPrimary: edge.Node.Space.IsPrimary,
+				ID:          unsafe.ReturnInt(strconv.Atoi(space.ID)),
+				Name:        space.Name,
+				IsPrivate:   space.Privacy == nil,
+				IsPrimary:   space.IsPrimary,
+				WorkspaceID: space.WorkspaceID,
 			}
 		}
 		mu.Unlock()
@@ -76,14 +94,13 @@ func (s *Service) spaces(ctx context.Context, workspaceID int) ([]domain.Space, 
 
 		mu.Lock()
 		for _, node := range r.Data.Result.Spaces.Nodes {
-			if node.WorkspaceID != workspaceID {
-				continue
-			}
+			space := node
 			index[node.ID] = domain.Space{
-				ID:        node.ID,
-				Name:      node.Name,
-				IsPrivate: node.Privacy == nil,
-				IsPrimary: node.IsPrimary,
+				ID:          unsafe.ReturnInt(strconv.Atoi(space.ID)),
+				Name:        space.Name,
+				IsPrivate:   space.Privacy == nil,
+				IsPrimary:   space.IsPrimary,
+				WorkspaceID: space.WorkspaceID,
 			}
 		}
 		mu.Unlock()

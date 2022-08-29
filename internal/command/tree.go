@@ -7,7 +7,6 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
-	"go.octolab.org/tact/loop/internal/pkg/unsafe"
 	"go.octolab.org/tact/loop/internal/service/loom"
 )
 
@@ -20,7 +19,6 @@ func Tree() *cobra.Command {
 
 		RunE: func(cmd *cobra.Command, args []string) error {
 			token := os.Getenv("LOOM_TOKEN")
-			workspaceID := unsafe.ReturnInt(cmd.Flags().GetInt("workspace"))
 
 			client, err := loom.NewClient(new(http.Client), "https://www.loom.com/graphql", token)
 			if err != nil {
@@ -28,7 +26,7 @@ func Tree() *cobra.Command {
 			}
 
 			service := loom.New(client)
-			tree, err := service.Tree(cmd.Context(), workspaceID)
+			tree, err := service.Workspaces(cmd.Context())
 			if err != nil {
 				return err
 			}

@@ -9,6 +9,13 @@ set -euo pipefail
 
 function dto() {
   cat \
+    tools/loom/responses/userWorkspaceMemberships.json \
+    tools/loom/responses/userWorkspaceMemberships.err.json |
+    gojsonstruct \
+      -packagename dto \
+      -typename UserWorkspaces \
+      >internal/service/loom/dto/uwm.go
+  cat \
     tools/loom/responses/GetMyClosedSpaceMemberships.json \
     tools/loom/responses/GetMyClosedSpaceMemberships.err.json |
     gojsonstruct \
@@ -29,14 +36,6 @@ function dto() {
       -packagename dto \
       -typename ArchivedSpaces \
       >internal/service/loom/dto/was.go
-
-  cat \
-    tools/loom/responses/userWorkspaceMemberships.json \
-    tools/loom/responses/userWorkspaceMemberships.err.json |
-    gojsonstruct \
-      -packagename dto \
-      -typename UserWorkspaceMemberships \
-      >internal/service/loom/dto/uwm.go
   make format
 }
 

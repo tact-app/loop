@@ -1,14 +1,18 @@
 package domain
 
-type Tree struct {
+type Workspace struct {
+	ID     int
+	Name   string
+	Type   string
 	Spaces []Space
 }
 
 type Space struct {
-	ID        string
-	Name      string
-	IsPrivate bool
-	IsPrimary bool
+	ID          int
+	Name        string
+	IsPrivate   bool
+	IsPrimary   bool
+	WorkspaceID int
 
 	Root Folder
 }

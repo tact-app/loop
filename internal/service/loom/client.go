@@ -31,14 +31,14 @@ const (
 	ArchivedSpaces Operation = "get-archived-spaces"
 	PrivateSpaces  Operation = "get-private-spaces"
 	PublicSpaces   Operation = "get-public-spaces"
-
-	UserWorkspaceMemberships Operation = "userWorkspaceMemberships"
+	UserWorkspaces Operation = "get-user-workspaces"
 )
 
 var aliases = map[string]string{
 	"get-archived-spaces": "GetWorkspaceArchivedSpaces",
 	"get-private-spaces":  "GetMyClosedSpaceMemberships",
 	"get-public-spaces":   "getOpenSpaces",
+	"get-user-workspaces": "userWorkspaceMemberships",
 }
 
 func NewClient(client HttpClient, endpoint, token string) (*Client, error) {
