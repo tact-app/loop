@@ -14,18 +14,19 @@ import (
 )
 
 func (s *Service) workspaces(ctx context.Context) ([]domain.Workspace, error) {
-	var r dto.UserWorkspaces
-	if err := s.c.Do(ctx, UserWorkspaces, nil, &r); err != nil {
+	var r dto.Workspaces
+	if err := s.c.Do(ctx, Workspaces, nil, &r); err != nil {
 		return nil, fmt.Errorf("fetch user workspaces: %w", err)
 	}
 
 	workspaces := make([]domain.Workspace, 0, len(r.Data.UserWorkspaceMemberships))
 	for _, workspace := range r.Data.UserWorkspaceMemberships {
+		org := workspace.Organization
 		workspaces = append(workspaces, domain.Workspace{
-			ID:     unsafe.ReturnInt(strconv.Atoi(workspace.Organization.ID)),
-			Name:   workspace.Organization.Name,
-			Type:   workspace.Organization.Type,
-			Spaces: make([]domain.Space, 0, workspace.Organization.Counts.Spaces.TotalActiveSpaces),
+			ID:     unsafe.ReturnInt(strconv.Atoi(org.ID)),
+			Name:   org.Name,
+			Type:   org.Type,
+			Spaces: make(map[int]domain.Space, org.Counts.Spaces.TotalActiveSpaces),
 		})
 	}
 	return workspaces, nil
@@ -34,7 +35,7 @@ func (s *Service) workspaces(ctx context.Context) ([]domain.Workspace, error) {
 func (s *Service) spaces(ctx context.Context) ([]domain.Space, error) {
 	var mu sync.Mutex
 	index := make(map[string]domain.Space)
-	limit := map[string]interface{}{"first": 1000}
+	limit := Vars{"first": 1000}
 
 	g, ctx := errgroup.WithContext(ctx)
 	g.Go(func() error {
@@ -115,4 +116,20 @@ func (s *Service) spaces(ctx context.Context) ([]domain.Space, error) {
 		spaces = append(spaces, space)
 	}
 	return spaces, nil
+}
+
+func (s *Service) folders(ctx context.Context, scope Vars, nested bool) (*domain.Folder, error) {
+	var r dto.Folders
+	if err := s.c.Do(ctx, Folders, scope, &r); err != nil {
+		return nil, err
+	}
+	return &domain.Folder{ID: "fake", Name: "Stub"}, nil
+	//{
+	//	"first": 99,
+	//	"parentFolderId": null,
+	//	"source": "SPACE",
+	//	"sourceValue": "{{spaceId}}",
+	//	"sortOrder": "ASC",
+	//	"sortType": "NAME"
+	//}
 }
