@@ -6,8 +6,9 @@ import (
 )
 
 type (
-	Vars    = map[string]interface{}
-	Pointer = interface{}
+	Operation string
+	Pointer   = interface{}
+	Vars      = map[string]interface{}
 )
 
 type HttpClient interface {

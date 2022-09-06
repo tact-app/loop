@@ -17,16 +17,6 @@ import (
 //go:embed ops/*.gql
 var operations embed.FS
 
-type Operation string
-
-func (op Operation) Name() string {
-	name := string(op)
-	if alias, has := aliases[name]; has {
-		return alias
-	}
-	return name
-}
-
 const (
 	Workspaces     Operation = "get-workspaces"
 	ArchivedSpaces Operation = "get-archived-spaces"
@@ -35,12 +25,19 @@ const (
 	Folders        Operation = "get-folders"
 )
 
-var aliases = map[string]string{
-	"get-workspaces":      "userWorkspaceMemberships",
-	"get-archived-spaces": "GetWorkspaceArchivedSpaces",
-	"get-private-spaces":  "GetMyClosedSpaceMemberships",
-	"get-public-spaces":   "getOpenSpaces",
-	"get-folders":         "GetPublishedFolders",
+var aliases = map[Operation]string{
+	Workspaces:     "userWorkspaceMemberships",
+	ArchivedSpaces: "GetWorkspaceArchivedSpaces",
+	PrivateSpaces:  "GetMyClosedSpaceMemberships",
+	PublicSpaces:   "getOpenSpaces",
+	Folders:        "GetPublishedFolders",
+}
+
+func name(op Operation) string {
+	if alias, has := aliases[op]; has {
+		return alias
+	}
+	return string(op)
 }
 
 func NewClient(client HttpClient, endpoint, token string) (*Client, error) {
@@ -79,7 +76,7 @@ func (c *Client) Do(ctx context.Context, op Operation, vars Vars, out Pointer) e
 		Query         string `json:"query"`
 		Variables     Vars   `json:"variables"`
 	}{
-		OperationName: op.Name(),
+		OperationName: name(op),
 		Query:         string(query),
 		Variables:     vars,
 	}
