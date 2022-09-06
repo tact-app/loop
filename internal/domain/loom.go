@@ -1,37 +1,45 @@
 package domain
 
+type (
+	FolderID    = string
+	LoomID      = string
+	OwnerID     = int
+	SpaceID     = int
+	WorkspaceID = int
+)
+
 type Workspace struct {
-	ID      int
+	ID      WorkspaceID
 	Name    string
 	Type    string
-	Archive map[int]Folder // Owner ID => Archived
-	Library map[int]Folder // Owner ID => Personal Library
-	Spaces  map[int]Space  // Space ID => Space
+	Archive map[OwnerID]Folder
+	Library map[OwnerID]Folder
+	Spaces  map[SpaceID]Space
 }
 
 type Space struct {
-	ID          int
-	WorkspaceID int
+	ID          SpaceID
+	WorkspaceID WorkspaceID
 	Name        string
 	IsPrivate   bool
 	IsPrimary   bool
-	Folders     map[string]Folder // Folder ID => Folder
+	Folders     map[FolderID]Folder
 }
 
 type Folder struct {
-	ID          string
-	OwnerID     int
-	WorkspaceID int
+	ID          FolderID
+	OwnerID     OwnerID
+	WorkspaceID WorkspaceID
 	Name        string
 	IsEditable  bool
 	IsShared    bool
 	Parent      *Folder
-	Folders     map[string]Folder // Folder ID => Folder
-	Looms       map[string]Loom   // Loom ID => Loom
+	Folders     map[FolderID]Folder
+	Looms       map[LoomID]Loom
 }
 
 type Loom struct {
-	ID   string
+	ID   LoomID
 	Name string
 	URL  string
 	Tags []Tag
