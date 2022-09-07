@@ -3,6 +3,7 @@ package loom
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"go.octolab.org/pointer"
 	"golang.org/x/sync/errgroup"
@@ -38,18 +39,40 @@ func (s *Service) Workspaces(ctx context.Context) ([]domain.Workspace, error) {
 		var err error
 		spaces, err = s.spaces(ctx)
 		if err != nil {
-			err = fmt.Errorf("fetch spaces: %w", err)
+			return fmt.Errorf("fetch spaces: %w", err)
 		}
-		return err
+		g, ctx := errgroup.WithContext(ctx)
+		for i := range spaces {
+			idx := i
+			g.Go(func() error {
+				scope := Vars{
+					"first":       99,
+					"sortType":    "NAME",
+					"sortOrder":   "ASC",
+					"source":      "SPACE",
+					"sourceValue": strconv.Itoa(spaces[idx].ID),
+				}
+				folders, err := s.folders(ctx, scope, true)
+				if err != nil {
+					return fmt.Errorf("fetch folders of space %d: %w", spaces[idx].ID, err)
+				}
+
+				spaces[idx].Folders = make(map[domain.FolderID]domain.Folder, len(folders))
+				for _, folder := range folders {
+					spaces[idx].Folders[folder.ID] = folder
+				}
+				return nil
+			})
+		}
+		return g.Wait()
 	})
 	g.Go(func() error {
 		var err error
 		scope := Vars{
-			"first":          99,
-			"parentFolderId": nil,
-			"source":         "ACTIVE",
-			"sortOrder":      "ASC",
-			"sortType":       "NAME",
+			"first":     99,
+			"sortOrder": "ASC",
+			"sortType":  "NAME",
+			"source":    "ACTIVE",
 		}
 		library, err = s.folders(ctx, scope, true)
 		if err != nil {
@@ -60,11 +83,10 @@ func (s *Service) Workspaces(ctx context.Context) ([]domain.Workspace, error) {
 	g.Go(func() error {
 		var err error
 		scope := Vars{
-			"first":          99,
-			"parentFolderId": nil,
-			"source":         "ARCHIVED",
-			"sortOrder":      "ASC",
-			"sortType":       "NAME",
+			"first":     99,
+			"sortType":  "NAME",
+			"sortOrder": "ASC",
+			"source":    "ARCHIVED",
 		}
 		archive, err = s.folders(ctx, scope, true)
 		if err != nil {
@@ -117,14 +139,5 @@ func (s *Service) Workspaces(ctx context.Context) ([]domain.Workspace, error) {
 		}
 	}
 
-	//{
-	//	"first": 99,
-	//	"parentFolderId": null,
-	//	"source": "SPACE",
-	//	"sourceValue": "{{spaceId}}",
-	//	"sortOrder": "ASC",
-	//	"sortType": "NAME"
-	//}
-
-	return workspaces, nil
+	return workspaces, g.Wait()
 }
