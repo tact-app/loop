@@ -4,14 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"go.octolab.org/pointer"
-	"go.octolab.org/tact/loop/internal/pkg/assert"
 	"strconv"
 	"sync"
 
+	"go.octolab.org/pointer"
 	"golang.org/x/sync/errgroup"
 
 	"go.octolab.org/tact/loop/internal/domain"
+	"go.octolab.org/tact/loop/internal/pkg/assert"
 	"go.octolab.org/tact/loop/internal/pkg/unsafe"
 	"go.octolab.org/tact/loop/internal/service/loom/dto"
 )
@@ -134,13 +134,12 @@ func (s *Service) folders(ctx context.Context, scope Vars, nested bool) ([]domai
 	if len(r.Errors) > 0 {
 		return nil, fmt.Errorf("fetch folders: %w", errors.New(r.Errors[0].Message))
 	}
-	if r.Data.GetPublishedFolders.Folders == nil {
+	if r.Data.GetPublishedFolders.Folders == nil || r.Data.GetPublishedFolders.Folders.TotalCount == 0 {
 		return nil, nil
 	}
 	f := r.Data.GetPublishedFolders.Folders
 
 	// check some invariants
-	assert.True(func() bool { return f.TotalCount > 0 })
 	assert.True(func() bool {
 		for i := range f.Edges[1:] {
 			if f.Edges[i+1].Node.IsArchived != f.Edges[0].Node.IsArchived {
@@ -203,6 +202,7 @@ func (s *Service) folders(ctx context.Context, scope Vars, nested bool) ([]domai
 		return true
 	})
 
+	g, ctx := errgroup.WithContext(ctx)
 	folders := make([]domain.Folder, 0, f.TotalCount)
 	for i := range f.Edges {
 		node := f.Edges[i].Node
@@ -215,6 +215,34 @@ func (s *Service) folders(ctx context.Context, scope Vars, nested bool) ([]domai
 			IsShared:    node.Shared,
 			ParentID:    pointer.ToString(node.ParentFolder.ID),
 		})
+		if nested {
+			index := len(folders) - 1
+			scope := clone(scope)
+			scope["parentFolderId"] = node.ID
+			g.Go(func() error {
+				children, err := s.folders(ctx, scope, nested)
+				if err != nil {
+					return fmt.Errorf("fetch subfolders of %s: %w", node.ID, err)
+				}
+
+				if len(children) == 0 {
+					return nil
+				}
+				folders[index].Folders = make(map[domain.FolderID]domain.Folder, len(folders))
+				for _, folder := range children {
+					folders[index].Folders[folder.ID] = folder
+				}
+				return nil
+			})
+		}
 	}
-	return folders, nil
+	return folders, g.Wait()
+}
+
+func clone(src Vars) Vars {
+	dst := make(Vars, len(src))
+	for k, v := range src {
+		dst[k] = v
+	}
+	return dst
 }
