@@ -134,10 +134,14 @@ func (s *Service) folders(ctx context.Context, scope Vars, nested bool) ([]domai
 	if len(r.Errors) > 0 {
 		return nil, fmt.Errorf("fetch folders: %w", errors.New(r.Errors[0].Message))
 	}
-	if r.Data.GetPublishedFolders.Folders == nil || r.Data.GetPublishedFolders.Folders.TotalCount == 0 {
+
+	if r.Data.GetPublishedFolders.Folders == nil {
 		return nil, nil
 	}
 	f := r.Data.GetPublishedFolders.Folders
+	if f.TotalCount == 0 {
+		return nil, nil
+	}
 
 	// check some invariants
 	assert.True(func() bool {
@@ -215,12 +219,10 @@ func (s *Service) folders(ctx context.Context, scope Vars, nested bool) ([]domai
 			IsShared:    node.Shared,
 			ParentID:    pointer.ToString(node.ParentFolder.ID),
 		})
-		if nested {
+		if nested && node.HasSubFolders {
 			index := len(folders) - 1
-			scope := clone(scope)
-			scope["parentFolderId"] = node.ID
 			g.Go(func() error {
-				children, err := s.folders(ctx, scope, nested)
+				children, err := s.folders(ctx, scope.Set("parentFolderId", node.ID), nested)
 				if err != nil {
 					return fmt.Errorf("fetch subfolders of %s: %w", node.ID, err)
 				}
@@ -237,12 +239,4 @@ func (s *Service) folders(ctx context.Context, scope Vars, nested bool) ([]domai
 		}
 	}
 	return folders, g.Wait()
-}
-
-func clone(src Vars) Vars {
-	dst := make(Vars, len(src))
-	for k, v := range src {
-		dst[k] = v
-	}
-	return dst
 }
