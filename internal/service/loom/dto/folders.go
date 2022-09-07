@@ -42,8 +42,8 @@ type Folders struct {
 								FirstName string `json:"first_name"`
 								LastName  string `json:"last_name"`
 							} `json:"owner"`
-							OwnerID   int    `json:"owner_id"`
-							SpecialID string `json:"special_id"`
+							OwnerID   int     `json:"owner_id"`
+							SpecialID *string `json:"special_id"`
 						} `json:"parent_folder"`
 						Shared bool `json:"shared"`
 						Space  *struct {
@@ -51,9 +51,9 @@ type Folders struct {
 							IsPrimary bool   `json:"is_primary"`
 							Name      string `json:"name"`
 						} `json:"space"`
-						SpecialID         any    `json:"special_id"`
-						TotalNestedVideos int    `json:"totalNestedVideos"`
-						Visibility        string `json:"visibility"`
+						SpecialID         *string `json:"special_id"`
+						TotalNestedVideos int     `json:"totalNestedVideos"`
+						Visibility        string  `json:"visibility"`
 					} `json:"node"`
 				} `json:"edges"`
 				PageInfo struct {

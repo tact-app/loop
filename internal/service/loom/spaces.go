@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"go.octolab.org/pointer"
 	"go.octolab.org/tact/loop/internal/pkg/assert"
 	"strconv"
 	"sync"
@@ -28,10 +29,12 @@ func (s *Service) workspaces(ctx context.Context) ([]domain.Workspace, error) {
 	for _, workspace := range r.Data.UserWorkspaceMemberships {
 		org := workspace.Organization
 		workspaces = append(workspaces, domain.Workspace{
-			ID:     unsafe.ReturnInt(strconv.Atoi(org.ID)),
-			Name:   org.Name,
-			Type:   org.Type,
-			Spaces: make(map[int]domain.Space, org.Counts.Spaces.TotalActiveSpaces),
+			ID:      unsafe.ReturnInt(strconv.Atoi(org.ID)),
+			Name:    org.Name,
+			Type:    org.Type,
+			Archive: make(map[domain.OwnerID]domain.Folder),
+			Library: make(map[domain.OwnerID]domain.Folder),
+			Spaces:  make(map[domain.SpaceID]domain.Space, org.Counts.Spaces.TotalActiveSpaces),
 		})
 	}
 	return workspaces, nil
@@ -54,13 +57,13 @@ func (s *Service) spaces(ctx context.Context) ([]domain.Space, error) {
 
 		mu.Lock()
 		for _, edge := range r.Data.Result.Spaces.Edges {
-			space := edge.Node
+			node := edge.Node
 			index[edge.Node.ID] = domain.Space{
-				ID:          unsafe.ReturnInt(strconv.Atoi(space.ID)),
-				Name:        space.Name,
-				IsPrivate:   space.Privacy != "workspace",
-				IsPrimary:   space.IsPrimary,
-				WorkspaceID: space.WorkspaceID,
+				ID:          unsafe.ReturnInt(strconv.Atoi(node.ID)),
+				Name:        node.Name,
+				IsPrimary:   node.IsPrimary,
+				IsPrivate:   node.Privacy != "workspace",
+				WorkspaceID: node.WorkspaceID,
 			}
 		}
 		mu.Unlock()
@@ -77,13 +80,13 @@ func (s *Service) spaces(ctx context.Context) ([]domain.Space, error) {
 
 		mu.Lock()
 		for _, edge := range r.Data.Result.Memberships.Edges {
-			space := edge.Node.Space
+			node := edge.Node.Space
 			index[edge.Node.Space.ID] = domain.Space{
-				ID:          unsafe.ReturnInt(strconv.Atoi(space.ID)),
-				Name:        space.Name,
-				IsPrivate:   space.Privacy == nil,
-				IsPrimary:   space.IsPrimary,
-				WorkspaceID: space.WorkspaceID,
+				ID:          unsafe.ReturnInt(strconv.Atoi(node.ID)),
+				Name:        node.Name,
+				IsPrimary:   node.IsPrimary,
+				IsPrivate:   node.Privacy == nil,
+				WorkspaceID: node.WorkspaceID,
 			}
 		}
 		mu.Unlock()
@@ -100,13 +103,13 @@ func (s *Service) spaces(ctx context.Context) ([]domain.Space, error) {
 
 		mu.Lock()
 		for _, node := range r.Data.Result.Spaces.Nodes {
-			space := node
 			index[node.ID] = domain.Space{
-				ID:          unsafe.ReturnInt(strconv.Atoi(space.ID)),
-				Name:        space.Name,
-				IsPrivate:   space.Privacy == nil,
-				IsPrimary:   space.IsPrimary,
-				WorkspaceID: space.WorkspaceID,
+				ID:          unsafe.ReturnInt(strconv.Atoi(node.ID)),
+				Name:        node.Name,
+				IsArchived:  true,
+				IsPrimary:   node.IsPrimary,
+				IsPrivate:   node.Privacy == nil,
+				WorkspaceID: node.WorkspaceID,
 			}
 		}
 		mu.Unlock()
@@ -123,7 +126,7 @@ func (s *Service) spaces(ctx context.Context) ([]domain.Space, error) {
 	return spaces, nil
 }
 
-func (s *Service) folders(ctx context.Context, scope Vars, nested bool) (*domain.Folder, error) {
+func (s *Service) folders(ctx context.Context, scope Vars, nested bool) ([]domain.Folder, error) {
 	var r dto.Folders
 	if err := s.c.Do(ctx, Folders, scope, &r); err != nil {
 		return nil, fmt.Errorf("fetch folders: %w", err)
@@ -134,20 +137,19 @@ func (s *Service) folders(ctx context.Context, scope Vars, nested bool) (*domain
 	if r.Data.GetPublishedFolders.Folders == nil {
 		return nil, nil
 	}
-
 	f := r.Data.GetPublishedFolders.Folders
 
 	// check some invariants
 	assert.True(func() bool { return f.TotalCount > 0 })
 	assert.True(func() bool {
 		for i := range f.Edges[1:] {
-			if f.Edges[i+1].Node.OrganizationID != f.Edges[0].Node.OrganizationID {
+			if f.Edges[i+1].Node.IsArchived != f.Edges[0].Node.IsArchived {
 				return false
 			}
 			if f.Edges[i+1].Node.IsTopLevelFolder != f.Edges[0].Node.IsTopLevelFolder {
 				return false
 			}
-			if f.Edges[i+1].Node.IsArchived != f.Edges[0].Node.IsArchived {
+			if f.Edges[i+1].Node.OrganizationID != f.Edges[0].Node.OrganizationID {
 				return false
 			}
 		}
@@ -159,24 +161,60 @@ func (s *Service) folders(ctx context.Context, scope Vars, nested bool) (*domain
 				if f.Edges[i+1].Node.Space != nil {
 					return false
 				}
+				if f.Edges[i+1].Node.OwnerID != f.Edges[0].Node.OwnerID {
+					return false
+				}
+				if f.Edges[i+1].Node.Visibility != f.Edges[0].Node.Visibility {
+					return false
+				}
 			}
-			return true
+			return f.Edges[0].Node.Visibility == "owner"
 		}
 		for i := range f.Edges[1:] {
 			if f.Edges[i+1].Node.Space.ID != f.Edges[0].Node.Space.ID {
+				return false
+			}
+			if f.Edges[i+1].Node.Visibility != f.Edges[0].Node.Visibility {
+				return false
+			}
+		}
+		return f.Edges[0].Node.Visibility == "workspace"
+	})
+	assert.True(func() bool {
+		if f.Edges[0].Node.IsTopLevelFolder {
+			for i := range f.Edges {
+				if f.Edges[i].Node.SpecialID != nil {
+					return false
+				}
+				if f.Edges[i].Node.ParentFolder.SpecialID == nil {
+					return false
+				}
+			}
+			return true
+		}
+		for i := range f.Edges {
+			if f.Edges[i].Node.SpecialID != nil {
+				return false
+			}
+			if f.Edges[i].Node.ParentFolder.SpecialID != nil {
 				return false
 			}
 		}
 		return true
 	})
 
-	return &domain.Folder{ID: "fake", Name: "Stub"}, nil
-	//{
-	//	"first": 99,
-	//	"parentFolderId": null,
-	//	"source": "SPACE",
-	//	"sourceValue": "{{spaceId}}",
-	//	"sortOrder": "ASC",
-	//	"sortType": "NAME"
-	//}
+	folders := make([]domain.Folder, 0, f.TotalCount)
+	for i := range f.Edges {
+		node := f.Edges[i].Node
+		folders = append(folders, domain.Folder{
+			ID:          node.ID,
+			OwnerID:     node.OwnerID,
+			WorkspaceID: node.OrganizationID,
+			Name:        node.Name,
+			IsEditable:  node.CurrentUserCanEdit,
+			IsShared:    node.Shared,
+			ParentID:    pointer.ToString(node.ParentFolder.ID),
+		})
+	}
+	return folders, nil
 }
