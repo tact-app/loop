@@ -2,7 +2,9 @@ package loom
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"go.octolab.org/tact/loop/internal/pkg/assert"
 	"strconv"
 	"sync"
 
@@ -17,6 +19,9 @@ func (s *Service) workspaces(ctx context.Context) ([]domain.Workspace, error) {
 	var r dto.Workspaces
 	if err := s.c.Do(ctx, Workspaces, nil, &r); err != nil {
 		return nil, fmt.Errorf("fetch user workspaces: %w", err)
+	}
+	if len(r.Errors) > 0 {
+		return nil, fmt.Errorf("fetch user workspaces: %w", errors.New(r.Errors[0].Message))
 	}
 
 	workspaces := make([]domain.Workspace, 0, len(r.Data.UserWorkspaceMemberships))
@@ -44,7 +49,7 @@ func (s *Service) spaces(ctx context.Context) ([]domain.Space, error) {
 			return fmt.Errorf("fetch open spaces: %w", err)
 		}
 		if err := r.Data.Result.Message; err != "" {
-			return fmt.Errorf("fetch open spaces: %s", err)
+			return fmt.Errorf("fetch open spaces: %w", errors.New(err))
 		}
 
 		mu.Lock()
@@ -67,7 +72,7 @@ func (s *Service) spaces(ctx context.Context) ([]domain.Space, error) {
 			return fmt.Errorf("fetch closed spaces: %w", err)
 		}
 		if err := r.Data.Result.Message; err != "" {
-			return fmt.Errorf("fetch closed spaces: %s", err)
+			return fmt.Errorf("fetch closed spaces: %w", errors.New(err))
 		}
 
 		mu.Lock()
@@ -90,7 +95,7 @@ func (s *Service) spaces(ctx context.Context) ([]domain.Space, error) {
 			return fmt.Errorf("fetch closed spaces: %w", err)
 		}
 		if err := r.Data.Result.Message; err != "" {
-			return fmt.Errorf("fetch closed spaces: %s", err)
+			return fmt.Errorf("fetch closed spaces: %w", errors.New(err))
 		}
 
 		mu.Lock()
@@ -121,8 +126,50 @@ func (s *Service) spaces(ctx context.Context) ([]domain.Space, error) {
 func (s *Service) folders(ctx context.Context, scope Vars, nested bool) (*domain.Folder, error) {
 	var r dto.Folders
 	if err := s.c.Do(ctx, Folders, scope, &r); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("fetch folders: %w", err)
 	}
+	if len(r.Errors) > 0 {
+		return nil, fmt.Errorf("fetch folders: %w", errors.New(r.Errors[0].Message))
+	}
+	if r.Data.GetPublishedFolders.Folders == nil {
+		return nil, nil
+	}
+
+	f := r.Data.GetPublishedFolders.Folders
+
+	// check some invariants
+	assert.True(func() bool { return f.TotalCount > 0 })
+	assert.True(func() bool {
+		for i := range f.Edges[1:] {
+			if f.Edges[i+1].Node.OrganizationID != f.Edges[0].Node.OrganizationID {
+				return false
+			}
+			if f.Edges[i+1].Node.IsTopLevelFolder != f.Edges[0].Node.IsTopLevelFolder {
+				return false
+			}
+			if f.Edges[i+1].Node.IsArchived != f.Edges[0].Node.IsArchived {
+				return false
+			}
+		}
+		return true
+	})
+	assert.True(func() bool {
+		if f.Edges[0].Node.Space == nil {
+			for i := range f.Edges[1:] {
+				if f.Edges[i+1].Node.Space != nil {
+					return false
+				}
+			}
+			return true
+		}
+		for i := range f.Edges[1:] {
+			if f.Edges[i+1].Node.Space.ID != f.Edges[0].Node.Space.ID {
+				return false
+			}
+		}
+		return true
+	})
+
 	return &domain.Folder{ID: "fake", Name: "Stub"}, nil
 	//{
 	//	"first": 99,

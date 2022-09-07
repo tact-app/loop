@@ -67,7 +67,7 @@ func (s *Service) Workspaces(ctx context.Context) ([]domain.Workspace, error) {
 		}
 		archive, err = s.folders(ctx, scope, true)
 		if err != nil {
-			err = fmt.Errorf("fetch archive: %w", err)
+			err = fmt.Errorf("fetch archived: %w", err)
 		}
 		return err
 	})
