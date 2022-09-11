@@ -8,39 +8,27 @@
 set -euo pipefail
 
 function dto() {
-  cat \
-    tools/loom/responses/userWorkspaceMemberships.json \
-    tools/loom/responses/userWorkspaceMemberships.err.json |
+  cat tools/loom/responses/userWorkspaceMemberships.*.json |
     gojsonstruct \
       -packagename dto \
       -typename Workspaces \
       >internal/service/loom/dto/workspaces.go
-  cat \
-    tools/loom/responses/GetMyClosedSpaceMemberships.json \
-    tools/loom/responses/GetMyClosedSpaceMemberships.err.json |
+  cat tools/loom/responses/GetMyClosedSpaceMemberships.*.json |
     gojsonstruct \
       -packagename dto \
       -typename PrivateSpaces \
       >internal/service/loom/dto/private_spaces.go
-  cat \
-    tools/loom/responses/getOpenSpaces.json \
-    tools/loom/responses/getOpenSpaces.err.json |
+  cat tools/loom/responses/getOpenSpaces.*.json |
     gojsonstruct \
       -packagename dto \
       -typename PublicSpaces \
       >internal/service/loom/dto/public_spaces.go
-  cat \
-    tools/loom/responses/GetWorkspaceArchivedSpaces.json \
-    tools/loom/responses/GetWorkspaceArchivedSpaces.err.json |
+  cat tools/loom/responses/GetWorkspaceArchivedSpaces.*.json |
     gojsonstruct \
       -packagename dto \
       -typename ArchivedSpaces \
       >internal/service/loom/dto/archived_spaces.go
-  cat \
-    tools/loom/responses/GetPublishedFolders.archive.json \
-    tools/loom/responses/GetPublishedFolders.root.json \
-    tools/loom/responses/GetPublishedFolders.space.json \
-    tools/loom/responses/GetPublishedFolders.err.json |
+  cat tools/loom/responses/GetPublishedFolders.*.json |
     gojsonstruct \
       -packagename dto \
       -typename Folders \
